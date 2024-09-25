@@ -1,4 +1,4 @@
-import { API_AUTH_LOGIN, API_KEY } from "../constants";
+import { API_AUTH_LOGIN } from "../constants";
 import { headers } from "../headers";
 
 export async function login({ email, password }) {
