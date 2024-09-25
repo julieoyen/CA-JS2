@@ -1,5 +1,4 @@
-export async function onRegister(event) {
-    import { API_AUTH_REGISTER } from '../../api/constants';
+import { API_AUTH_REGISTER } from '../../api/constants';
 export async function onRegister(event) {
     event.preventDefault();
     const emailValue = document.querySelector('#email').value;
@@ -38,6 +37,4 @@ export async function onRegister(event) {
     } catch (error) {
         console.error('Error:', error);
     }
-}
-
 }
