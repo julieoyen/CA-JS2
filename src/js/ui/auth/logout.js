@@ -1,4 +1,4 @@
 export function onLogout() {
-  window.location.href = "/auth/login/";
   localStorage.clear();
+  window.location.href = "/auth/login/";
 }

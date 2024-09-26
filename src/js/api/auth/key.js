@@ -1,8 +1,8 @@
-export async function getKey(token) {
-  const token = localStorage.getItem(token);
-  if (!token) {
-    console.error(`Token not found`);
+export async function getKey() {
+  const accessToken = localStorage.getItem("token");
+  if (!accessToken) {
+    console.error("Unable to find accessToken in localStorage");
     return null;
   }
-  return token;
+  return accessToken;
 }
