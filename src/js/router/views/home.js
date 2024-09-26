@@ -1,16 +1,17 @@
 import { authGuard } from "../../utilities/authGuard";
 authGuard();
 
-import { API_SOCIAL_POSTS } from "../../api/constants";
-let alteredEndpoint = `${API_SOCIAL_POSTS}/following`
-let useAltEndpoint = false; // Initialize the toggle variable
+import { API_SOCIAL_POSTS, API_KEY, API_SOCIAL_POSTS_FOLLOWING } from "../../api/constants";
 
-function retrievePosts(endpoint)
-{fetch(endpoint, {
+let endpoint = API_SOCIAL_POSTS
+
+// Function to retrieve and display posts from the specified endpoint
+function retrievePosts(endpointValue) {
+  fetch(endpointValue, {
     method: "GET",
     headers: {
       'Content-Type': 'application/json',
-      'X-Noroff-API-Key': '43a001bd-a6e7-4ff1-be52-17baec127374',
+      'X-Noroff-API-Key': API_KEY,
       'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWtzZWxfb2xkZWlkZSIsImVtYWlsIjoiYWtzaGVsODc3MDdAc3R1ZC5ub3JvZmYubm8iLCJpYXQiOjE3MjcxMjYxNjh9.kTNufOOgrial4IJ1MjYPrtdj2ecCzzYRcuyE-vRVnkk'
     }
   })
@@ -22,15 +23,17 @@ function retrievePosts(endpoint)
   })
   .then(data => {
     const postsContainer = document.getElementById('posts-container');
-  
+    postsContainer.innerHTML = ''; // Clear the container before repopulating
+
+    // Populate the container with posts
     data.data.forEach(post => {
       if (post.title) {
         const postDiv = document.createElement('div');
         postDiv.classList.add('post');
-  
+
         let postContent = 
         `<h2>${post.title}</h2>
-         <p>author: ${post.author}`;
+         <p>author: ${post.author}</p>`;
 
         if (post.body) {
           postContent += `<p>${post.body}</p>`;
@@ -43,7 +46,7 @@ function retrievePosts(endpoint)
         if (post.created) {
           postContent += `<p><strong>Publish date:</strong> ${new Date(post.created).toLocaleDateString()} ${new Date(post.created).toLocaleTimeString()}</p>`;
         }
-  
+
         if (post.tags && post.tags.length > 0) {
           postContent += `<p><strong>Tags:</strong> ${post.tags.join(', ')}</p>`;
         }
@@ -56,12 +59,20 @@ function retrievePosts(endpoint)
   .catch(error => {
     console.error('There was a problem with the fetch operation:', error);
   });
-  }
+}
 
-  document.getElementById('toggleButton').addEventListener('click', () => {
-    const endpoint = useAltEndpoint ? API_SOCIAL_POSTS : alteredEndpoint;
-    useAltEndpoint = !useAltEndpoint;
-    document.getElementById('toggleButton').textContent = useAltEndpoint ? 'Fetch from alteredEndpoint' : 'Fetch from API_SOCIAL_POSTS';
 
-    retrievePosts(endpoint)
-})
+retrievePosts(endpoint);
+
+
+document.getElementById('toggleButton').addEventListener('click', () => {
+
+  endpoint = (endpoint === API_SOCIAL_POSTS) ? API_SOCIAL_POSTS_FOLLOWING : API_SOCIAL_POSTS;
+
+
+  document.getElementById('toggleButton').innerText = 
+    (endpoint === API_SOCIAL_POSTS_FOLLOWING) ? 'Displaying followed posts' : 'Displaying all posts';
+
+
+  retrievePosts(endpoint);
+});
