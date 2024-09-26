@@ -6,6 +6,7 @@ import { login } from "../../api/auth/login";
  * @param {Event} event - The login form submission event.
  * @returns {void}
  */
+
 export async function onLogin(event) {
   event.preventDefault();
   const formData = new FormData(event.target);

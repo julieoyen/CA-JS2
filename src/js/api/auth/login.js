@@ -5,7 +5,7 @@ import { headers } from "../headers";
  *
  * @async
  * @param {Object} params - The login parameters.
- * @param {string} params.email - The user's email address.
+ * @param {string} data.email - The user's email address.
  * @param {string} params.password - The user's password.
  * @returns {Promise<Object>} A promise that resolves with the login response data, or an error object if the login fails.
  * @throws {Error} If the login request fails.
