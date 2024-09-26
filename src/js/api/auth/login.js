@@ -13,15 +13,16 @@ export async function login({ email, password }) {
     });
 
     if (!response.ok) {
-      const errorText = `Login failed ${response.statusText} (${response.status})`;
+      const errorText = `Login failed${response.statusText}(${response.status})`;
       alert(`Error: ${errorText}. Please try again.`);
       throw new Error(errorText);
     }
+
     const responseData = await response.json();
-    console.log(responseData);
-    return responseData;
+    const accessToken = responseData.data.accessToken;
+    localStorage.setItem("accessToken", accessToken);
+    window.location.href = "/";
   } catch (error) {
     console.error("Login error:", error);
-    return { error: error.message };
   }
 }
