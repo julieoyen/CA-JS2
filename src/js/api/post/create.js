@@ -1,8 +1,6 @@
-// js/api/post/create.js
 import { API_SOCIAL_POSTS } from "../constants";
 import { headers } from "../headers";
 import { getKey } from "../auth/key";
-
 /**
  * Sends a request to create a new post on the API.
  *
@@ -10,15 +8,19 @@ import { getKey } from "../auth/key";
  * including the post details (title, body, tags, media, and altMedia) in a JSON
  * payload, along with necessary headers for authorization and API key.
  *
- * @async
  * @param {Object} postData - The post data object.
  * @param {string} postData.title - The title of the post.
  * @param {string} postData.body - The body/content of the post.
- * @param {string[]} postData.tags - An array of tags associated with the post.
- * @param {string} postData.media - The URL of the media (image) associated with the post and alt text.
+ * @param {string|string[]} postData.tags - The tags associated with the post (can be a single string or an array of strings).
+ * @param {string} [postData.media] - The URL of the media (image) associated with the post.
+ * @param {string} [postData.altMedia] - The alt text for the media (image).
  *
+ * @throws {Error} If the API request fails or returns an error.
  * @returns {Promise<void>} A promise that resolves when the request is complete.
  */
+const defaultHeaders = new Headers();
+defaultHeaders.append("Content-Type", "application/json");
+
 export async function createPost({ title, body, tags, media, altMedia }) {
   console.log("createPost function called!");
   console.log("API endpoint:", API_SOCIAL_POSTS);
@@ -27,8 +29,23 @@ export async function createPost({ title, body, tags, media, altMedia }) {
   const accessToken = await getKey();
   const apiKeyHeader = headers();
 
-  const postHeaders = createHeaders(accessToken, apiKeyHeader);
-  const postData = createPostData({ title, body, tags, media, altMedia });
+  const postHeaders = new Headers(defaultHeaders);
+  postHeaders.append("Authorization", `Bearer ${accessToken}`);
+  const [apiKey, apiValue] = apiKeyHeader.entries().next().value;
+  postHeaders.append(apiKey, apiValue);
+
+  const postData = {
+    title,
+    body,
+    tags: tags ? [tags] : [],
+  };
+
+  if (media) {
+    postData.media = {
+      url: media,
+      alt: altMedia || "Image alt text",
+    };
+  }
 
   console.log("Post data:", postData);
 
@@ -52,30 +69,4 @@ export async function createPost({ title, body, tags, media, altMedia }) {
     console.error("Error creating post:", error);
     throw error;
   }
-}
-
-function createHeaders(accessToken, apiKeyHeader) {
-  const postHeaders = new Headers();
-  postHeaders.append("Content-Type", "application/json");
-  postHeaders.append("Authorization", `Bearer ${accessToken}`);
-  const [apiKey, apiValue] = apiKeyHeader.entries().next().value;
-  postHeaders.append(apiKey, apiValue);
-  return postHeaders;
-}
-
-function createPostData({ title, body, tags, media }) {
-  const postData = {
-    title,
-    body,
-    tags: tags ? [tags] : [],
-  };
-
-  if (media) {
-    postData.media = {
-      url: media,
-      alt: altMedia || "Image alt text",
-    };
-  }
-
-  return postData;
 }

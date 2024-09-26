@@ -1,6 +1,16 @@
-// ui/post/create.js
 import { createPost } from "../../api/post/create";
-
+/**
+ * Handles the creation of a new post when the form is submitted.
+ *
+ * This function prevents the default form submission behavior, extracts the post
+ * data from the form fields, and calls the `createPost` function to send the
+ * request to the API.
+ *
+ * @param {Event} event - The form submission event.
+ *
+ * @throws {Error} If the API request fails or returns an error.
+ * @returns {Promise<void>} A promise that resolves when the request is complete.
+ */
 export async function onCreatePost(event) {
   event.preventDefault();
   const form = event.target;
