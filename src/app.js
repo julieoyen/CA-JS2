@@ -4,6 +4,7 @@ import { setLogoutListener } from "./js/ui/global/logout";
 
 await router(window.location.pathname);
 
-if (document.querySelector("#logout-button") !== null) {
+const logoutButton = document.getElementById("logout-btn");
+if (logoutButton) {
   setLogoutListener();
 }
