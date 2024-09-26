@@ -21,7 +21,7 @@ export async function login({ email, password }) {
     const responseData = await response.json();
     const accessToken = responseData.data.accessToken;
     localStorage.setItem("accessToken", accessToken);
-    window.location.href = "/index.html";
+    window.location.href = "/";
   } catch (error) {
     console.error("Login error:", error);
   }
