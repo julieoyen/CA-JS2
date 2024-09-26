@@ -58,7 +58,8 @@ export async function createPost({ title, body, tags, media, altMedia }) {
     });
 
     if (response.ok) {
-      await response.json();
+      const responseData = await response.json();
+      console.log("Response data:", responseData);
       window.alert("Post created successfully!");
       window.location.href = "/";
     } else {
