@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,7 +9,16 @@
   </head>
   <body>
     <h1>Profile</h1>
+    <button id="create-post-btn" style="display: none">Create Post</button>
+    <section id="profile-info"></section>
+    <section id="user-posts"></section>
 
+    <div id="auth-actions">
+      <!-- Buttons for authenticated users (Edit/Delete/Create Post) -->
+
+      <button id="follow-btn" style="display: none">Follow</button>
+      <button id="unfollow-btn" style="display: none">Unfollow</button>
+    </div>
     <form name="updateProfile">
       <button>Update Profile</button>
     </form>
