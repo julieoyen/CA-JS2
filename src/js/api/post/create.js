@@ -19,19 +19,16 @@ import { getKey } from "../auth/key";
  * @returns {void}
  */
 
-const defaultHeaders = new Headers();
-defaultHeaders.append("Content-Type", "application/json");
-
 export async function createPost({ title, body, tags, media, altMedia }) {
-  console.log("createPost function called!");
-  console.log("API endpoint:", API_SOCIAL_POSTS);
-
   const apiUrl = API_SOCIAL_POSTS;
   const accessToken = await getKey();
   const apiKeyHeader = headers();
 
-  const postHeaders = new Headers(defaultHeaders);
-  postHeaders.append("Authorization", `Bearer ${accessToken}`);
+  const postHeaders = new Headers({
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  });
+
   const [apiKey, apiValue] = apiKeyHeader.entries().next().value;
   postHeaders.append(apiKey, apiValue);
 
