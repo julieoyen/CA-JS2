@@ -1,36 +1,34 @@
 import { API_SOCIAL_POSTS } from "../constants";
 import { headers } from "../headers";
 import { getKey } from "../auth/key";
+
 /**
- * Sends a request to create a new post on the API.
+ * Creates a new social post on the API.
  *
- * This function sends a POST request to the server,
- * including the post details (title, body, tags, media, and altMedia) in a JSON
- * payload, along with necessary headers for authorization and API key.
+ * This function takes in the post data, sets up the API request headers,
+ * constructs the post data object, and sends a POST request to the API endpoint.
+ * If the response is successful, it alerts the user and redirects them to the homepage.
+ * If the response is not successful, it throws an error with a message indicating
+ * that there was an error creating the post.
  *
- * @param {Object} postData - The post data object.
- * @param {string} postData.title - The title of the post.
- * @param {string} postData.body - The body/content of the post.
- * @param {string|string[]} postData.tags - The tags associated with the post (can be a single string or an array of strings).
- * @param {string} [postData.media] - The URL of the media (image) associated with the post.
- * @param {string} [postData.altMedia] - The alt text for the media (image).
- *
- * @throws {Error} If the API request fails or returns an error.
- * @returns {Promise<void>} A promise that resolves when the request is complete.
+ * @param {string} title - The title of the post.
+ * @param {string} body - The body of the post.
+ * @param {string} tags - The tags for the post.
+ * @param {string} media - The media URL for the post.
+ * @param {string} altMedia - The alt text for the media.
+ * @returns {void}
  */
-const defaultHeaders = new Headers();
-defaultHeaders.append("Content-Type", "application/json");
 
 export async function createPost({ title, body, tags, media, altMedia }) {
-  console.log("createPost function called!");
-  console.log("API endpoint:", API_SOCIAL_POSTS);
-
   const apiUrl = API_SOCIAL_POSTS;
   const accessToken = await getKey();
   const apiKeyHeader = headers();
 
-  const postHeaders = new Headers(defaultHeaders);
-  postHeaders.append("Authorization", `Bearer ${accessToken}`);
+  const postHeaders = new Headers({
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  });
+
   const [apiKey, apiValue] = apiKeyHeader.entries().next().value;
   postHeaders.append(apiKey, apiValue);
 

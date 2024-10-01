@@ -1,5 +1,10 @@
+/**
+ * Handles the logout functionality.
+ *
+ * @returns {void}
+ */
 export function onLogout() {
-  localStorage.removeItem("accessToken");
+  localStorage.clear();
 
   window.location.href = "/auth/login/";
 }
