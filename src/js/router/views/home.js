@@ -3,7 +3,7 @@ authGuard();
 
 import { API_SOCIAL_POSTS, API_KEY, API_SOCIAL_POSTS_FOLLOWING } from "../../api/constants";
 
-let endpoint = API_SOCIAL_POSTS
+let endpoint = API_SOCIAL_POSTS;
 
 // Function to retrieve and display posts from the specified endpoint
 function retrievePosts(endpointValue) {
@@ -31,6 +31,14 @@ function retrievePosts(endpointValue) {
         const postDiv = document.createElement('div');
         postDiv.classList.add('post');
 
+        // Create a clickable anchor element
+        const postLink = document.createElement('a');
+// Change the href to include the post ID as part of the path, not as a query parameter
+        postLink.href = `/post/?id=${post.id}`;
+
+        postLink.style.textDecoration = 'none'; // Remove underline for styling, optional
+        postLink.style.color = 'inherit'; // Maintain default text color, optional
+
         let postContent = 
         `<h2>${post.title}</h2>
          <p>author: ${post.author}</p>`;
@@ -52,7 +60,12 @@ function retrievePosts(endpointValue) {
         }
 
         postDiv.innerHTML = postContent;
-        postsContainer.appendChild(postDiv);
+
+        // Append the content inside the link
+        postLink.appendChild(postDiv);
+
+        // Append the link to the container
+        postsContainer.appendChild(postLink);
       }
     });
   })
@@ -61,18 +74,13 @@ function retrievePosts(endpointValue) {
   });
 }
 
-
 retrievePosts(endpoint);
 
-
 document.getElementById('toggleButton').addEventListener('click', () => {
-
   endpoint = (endpoint === API_SOCIAL_POSTS) ? API_SOCIAL_POSTS_FOLLOWING : API_SOCIAL_POSTS;
-
 
   document.getElementById('toggleButton').innerText = 
     (endpoint === API_SOCIAL_POSTS_FOLLOWING) ? 'Displaying followed posts' : 'Displaying all posts';
-
 
   retrievePosts(endpoint);
 });
