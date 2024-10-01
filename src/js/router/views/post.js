@@ -1,20 +1,16 @@
-
-function getPostIDFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('postID');
-}
-
+import { getIDFromURL } from "../../utilities/getInfo";
 import { authGuard } from "../../utilities/authGuard";
+
 authGuard();
 
 import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
 
-// Get the ID from the URL parameters
-const urlParams = new URLSearchParams(window.location.search);
-const postId = urlParams.get('id'); // Assuming the URL is something like /post.html?id=123
-const endpoint = `${API_SOCIAL_POSTS}/${postId}`;
+const postId = getIDFromURL();
+console.log(postId);
 
-// Function to retrieve and display a single post from the specified endpoint
+// Modify the endpoint to include the _author=true query parameter
+const endpoint = `${API_SOCIAL_POSTS}/${postId}?_author=true`;
+
 function retrievePost(endpointValue) {
   fetch(endpointValue, {
     method: "GET",
@@ -40,10 +36,10 @@ function retrievePost(endpointValue) {
       const postDiv = document.createElement('div');
       postDiv.classList.add('post');
 
-      // Build post content
+      // Build post content with clickable author name
       let postContent = `
         <h2>${post.title}</h2>
-        <p>Author: ${post.author}</p>
+        <p>Author: <a href=/profile/?author=${post.author.name}>${post.author.name}</a></p>
       `;
 
       if (post.body) {

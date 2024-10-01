@@ -1,9 +1,17 @@
 import { authGuard } from "../../utilities/authGuard";
 authGuard();
 
+import { getMyName } from "../../utilities/getInfo";
+const myName = getMyName();
+console.log()
+const myProfileLink = document.getElementById("my-profile-link");
+
+// Set the href attribute
+myProfileLink.href = `/profile/?author=${myName}`; // Replace with your desired URL
+
 import { API_SOCIAL_POSTS, API_KEY, API_SOCIAL_POSTS_FOLLOWING } from "../../api/constants";
 
-let endpoint = API_SOCIAL_POSTS;
+let endpoint = API_SOCIAL_POSTS+"?_author=true";
 
 // Function to retrieve and display posts from the specified endpoint
 function retrievePosts(endpointValue) {
@@ -33,7 +41,7 @@ function retrievePosts(endpointValue) {
 
         // Create a clickable anchor element
         const postLink = document.createElement('a');
-// Change the href to include the post ID as part of the path, not as a query parameter
+        // Change the href to include the post ID as part of the path, not as a query parameter
         postLink.href = `/post/?id=${post.id}`;
 
         postLink.style.textDecoration = 'none'; // Remove underline for styling, optional
@@ -41,7 +49,7 @@ function retrievePosts(endpointValue) {
 
         let postContent = 
         `<h2>${post.title}</h2>
-         <p>author: ${post.author}</p>`;
+         <p>Author: <a href=/profile/?author=${post.author.name}>${post.author.name}</a></p>`;
 
         if (post.body) {
           postContent += `<p>${post.body}</p>`;
