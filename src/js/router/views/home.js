@@ -1,29 +1,34 @@
 import { authGuard } from "../../utilities/authGuard";
-import { getKey } from "../../api/auth/key";
-import { getMyName } from "../../utilities/getInfo";
-import { API_SOCIAL_POSTS, API_KEY, API_SOCIAL_POSTS_FOLLOWING } from "../../api/constants";
-
 authGuard();
 
+import { getMyName } from "../../utilities/getInfo.js";
 const myName = getMyName();
+console.log()
 const myProfileLink = document.getElementById("my-profile-link");
-const myName = getMyName();
-const accessToken = await getKey();
-let endpoint = API_SOCIAL_POSTS+"?_author=true";
 
+// Set the href attribute
 myProfileLink.href = `/profile/?author=${myName}`; // Replace with your desired URL
+
+import { API_SOCIAL_POSTS, API_KEY, API_SOCIAL_POSTS_FOLLOWING } from "../../api/constants";
+
+let endpoint = API_SOCIAL_POSTS+"?_author=true";
 
 // Function to retrieve and display posts from the specified endpoint
 function retrievePosts(endpointValue) {
   fetch(endpointValue, {
     method: "GET",
     headers: {
-      "Content-Type": "application/json",
-      "X-Noroff-API-Key": API_KEY,
-      Authorization: `Bearer ${accessToken}`,
-    },
+      'Content-Type': 'application/json',
+      'X-Noroff-API-Key': API_KEY,
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWtzZWxfb2xkZWlkZSIsImVtYWlsIjoiYWtzaGVsODc3MDdAc3R1ZC5ub3JvZmYubm8iLCJpYXQiOjE3MjcxMjYxNjh9.kTNufOOgrial4IJ1MjYPrtdj2ecCzzYRcuyE-vRVnkk'
+    }
   })
- 
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
   .then(data => {
     const postsContainer = document.getElementById('posts-container');
     postsContainer.innerHTML = ''; // Clear the container before repopulating
@@ -46,33 +51,8 @@ function retrievePosts(endpointValue) {
         `<h2>${post.title}</h2>
          <p>Author: <a href=/profile/?author=${post.author.name}>${post.author.name}</a></p>`;
 
-
-          if (post.body) {
-            postContent += `<p>${post.body}</p>`;
-          }
-
-          if (post.media && post.media.url) {
-            postContent += `<img src="${post.media.url}" alt="${
-              post.media.alt || "Post image"
-            }" style="width: 100%; height: auto;">`;
-          }
-
-          if (post.created) {
-            postContent += `<p><strong>Publish date:</strong> ${new Date(
-              post.created
-            ).toLocaleDateString()} ${new Date(
-              post.created
-            ).toLocaleTimeString()}</p>`;
-          }
-
-          if (post.tags && post.tags.length > 0) {
-            postContent += `<p><strong>Tags:</strong> ${post.tags.join(
-              ", "
-            )}</p>`;
-          }
-
-          postDiv.innerHTML = postContent;
-          postsContainer.appendChild(postDiv);
+        if (post.body) {
+          postContent += `<p>${post.body}</p>`;
         }
 
         // DELETE BUTTON
@@ -101,8 +81,11 @@ function retrievePosts(endpointValue) {
         // Append the link to the container
         postsContainer.appendChild(postLink);
       }
-
     });
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
 }
 
 retrievePosts(endpoint);
