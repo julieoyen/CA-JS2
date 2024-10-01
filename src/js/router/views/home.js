@@ -5,6 +5,7 @@ import { API_SOCIAL_POSTS, API_KEY, API_SOCIAL_POSTS_FOLLOWING } from "../../api
 
 authGuard();
 
+const myName = getMyName();
 const myProfileLink = document.getElementById("my-profile-link");
 const myName = getMyName();
 const accessToken = await getKey();
@@ -73,6 +74,12 @@ function retrievePosts(endpointValue) {
           postDiv.innerHTML = postContent;
           postsContainer.appendChild(postDiv);
         }
+
+        // DELETE BUTTON
+        if (myName ==  post.author.name) {
+          postContent += `<button id="delete-button" onclick="deletePost(${post.id})">delete post ${post.id}</button>`
+        }
+
 
         if (post.media && post.media.url) {
           postContent += `<img src="${post.media.url}" alt="${post.media.alt || 'Post image'}" style="width: 100%; height: auto;">`;
