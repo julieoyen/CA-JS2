@@ -1,7 +1,7 @@
 import { authGuard } from "../../utilities/authGuard";
 authGuard();
 
-import { getMyName } from "../../utilities/getInfo";
+import { getMyName } from "../../utilities/getInfo.js";
 const myName = getMyName();
 console.log()
 const myProfileLink = document.getElementById("my-profile-link");
@@ -54,6 +54,12 @@ function retrievePosts(endpointValue) {
         if (post.body) {
           postContent += `<p>${post.body}</p>`;
         }
+
+        // DELETE BUTTON
+        if (myName ==  post.author.name) {
+          postContent += `<button id="delete-button" onclick="deletePost(${post.id})">delete post ${post.id}</button>`
+        }
+
 
         if (post.media && post.media.url) {
           postContent += `<img src="${post.media.url}" alt="${post.media.alt || 'Post image'}" style="width: 100%; height: auto;">`;
