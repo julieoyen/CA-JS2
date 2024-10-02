@@ -1,4 +1,7 @@
 # Social Media Application
+## Made by [Julie](https://github.com/julieoyen) and [Aksel](https://github.com/AkselOldeide) 
+
+[Deploy here](https://ca-javascript2.netlify.app)
 
 This is a client-side social media application built for the JavaScript 2 course assignment. It allows users to register, log in, create, edit, and delete posts using a provided API. 
 
