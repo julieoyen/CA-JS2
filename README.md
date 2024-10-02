@@ -1,4 +1,1 @@
-Test
-TEst julie
-test aksel
-test aksel 2
+[Deploy](https://ca-javascript2.netlify.app)
