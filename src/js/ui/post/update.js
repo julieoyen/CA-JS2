@@ -1,54 +1,75 @@
+/**
+ * Fetches post data from the API and populates the edit form with the post information.
+ *
+ * @async
+ * @param {string} postId - The ID of the post to update.
+ * @returns {Promise<void>} - A promise that resolves when the post data is successfully fetched and the form is populated.
+ * @throws {Error} If the request to fetch post data fails.
+ */
+
 import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
 import { headers } from "../../api/headers";
 import { getIDFromURL, getMyToken } from "../../utilities/getInfo";
 
-
-
 const targetId = getIDFromURL();
-const endpoint = API_SOCIAL_POSTS + "/" + targetId;
-console.log(endpoint);
+const endpoint = `${API_SOCIAL_POSTS}/${targetId}`;
 
-// Function to fetch post data from the API and populate the form
+/**
+ * Fetches post data from the API and populates the form.
+ *
+ * @async
+ * @param {string} postId - The ID of the post to update.
+ * @returns {Promise<void>} - A promise that resolves when the post data is fetched.
+ * @throws {Error} If the request to fetch post data fails.
+ */
 export async function onUpdatePost(postId) {
-  const token = getMyToken(); // Retrieve the Bearer token
+  const token = getMyToken();
 
   try {
     const response = await fetch(endpoint, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,      // Set the Bearer token
-        'X-Noroff-API-Key': API_KEY,             // Set the API key
+        Authorization: `Bearer ${token}`,
+        "X-Noroff-API-Key": API_KEY,
         ...headers(),
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch post data');
+      throw new Error("Failed to fetch post data");
     }
 
     const postData = await response.json();
-    populateForm(postData.data); // Accessing the 'data' property in the response
+    populateForm(postData.data);
   } catch (error) {
-    console.error('Error fetching post data:', error);
+    console.error("Error fetching post data:", error);
   }
 }
 
-// Function to populate the form with the post data
+/**
+ * Populates the form with the fetched post data.
+ *
+ * @param {Object} post - The post data object containing title, body, tags, and media information.
+ * @returns {void}
+ */
 function populateForm(post) {
-  document.getElementById('title').value = post.title;
-  document.getElementById('body').value = post.body;
-  document.getElementById('tags').value = post.tags.join(', ');
-  document.getElementById('image').value = post.media?.url || ''; // Assuming 'media.url' is the image URL
-  document.getElementById('imageAlt').value = post.media?.alt || ''; // Assuming 'media.alt' is the alt text
+  document.getElementById("title").value = post.title;
+  document.getElementById("body").value = post.body;
+  document.getElementById("tags").value = post.tags.join(", ");
+  document.getElementById("image").value = post.media?.url || "";
+  document.getElementById("imageAlt").value = post.media?.alt || "";
 }
 
-
+/**
+ * Fetches and displays the post data by calling onUpdatePost.
+ *
+ * @async
+ * @returns {Promise<void>} - A promise that resolves when the post data is fetched and displayed.
+ */
+export async function fetchPostData() {
+  const postId = getIDFromURL();
+  await onUpdatePost(postId);
+}
 
 // Call this when the page loads to fetch and display the post data
-export async function fetchPostData() {
-  const postId = getIDFromURL(); // Define how you're getting the post ID
-  await onUpdatePost(postId); // Call the update function to fetch and populate the form
-}
-
-// Example of how you could call fetchPostData on page load
 fetchPostData();

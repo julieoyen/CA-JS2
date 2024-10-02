@@ -45,10 +45,7 @@ export async function createPost({ title, body, tags, media, altMedia }) {
     };
   }
 
-  console.log("Post data:", postData);
-
   try {
-    console.log("About to send request to API...");
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: postHeaders,
@@ -56,15 +53,13 @@ export async function createPost({ title, body, tags, media, altMedia }) {
     });
 
     if (response.ok) {
-      const responseData = await response.json();
-      console.log("Response data:", responseData);
+      await response.json();
       window.alert("Post created successfully!");
       window.location.href = "/";
     } else {
       throw new Error(`Error creating post: ${response.statusText}`);
     }
   } catch (error) {
-    console.error("Error creating post:", error);
     throw error;
   }
 }
