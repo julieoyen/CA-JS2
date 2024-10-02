@@ -6,30 +6,28 @@ import { getMyToken } from "../../utilities/getInfo.js"; // Import the function 
 const token = getMyToken(); // Retrieve the token directly
 
 async function makeGetRequest(url, requestHeaders) {
+  if (token) {
+    requestHeaders.append("Authorization", `Bearer ${token}`); // Append token to headers
+  }
 
-    if (token) {
-        requestHeaders.append("Authorization", `Bearer ${token}`); // Append token to headers
+  const fetchOptions = {
+    method: "GET",
+    headers: requestHeaders,
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(url, fetchOptions);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
-
-    const fetchOptions = {
-        method: "GET",
-        headers: requestHeaders,
-        redirect: "follow",
-    };
-
-    try {
-        const response = await fetch(url, fetchOptions);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch data: ${response.statusText}`);
-        }
-        const result = await response.json();
-        return result.data;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return null; // Return null for error handling
-    }
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null; // Return null for error handling
+  }
 }
-
 
 export async function readPost(id) {
   const requestHeaders = headers();

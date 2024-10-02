@@ -1,108 +1,167 @@
-import { authGuard } from "../../utilities/authGuard"; // Import authentication guard
-import { readPostsByUser } from "../../api/post/read"; // Import function to fetch posts by user
-import { readProfile } from "../../api/profile/read"; // Import function to fetch user profile
-import { deletePost } from "../../api/post/delete"; // Import function to delete a post
+import { readPostsByUser } from "../../api/post/read";
+import { readProfile } from "../../api/profile/read";
+import { deletePost } from "../../api/post/delete";
+import { showUpdateForm, onUpdateProfile } from "../../ui/profile/update";
+import { getMyName, getNameFromURL } from "../../utilities/getInfo";
 
-import { getMyName, getNameFromURL } from "../../utilities/getInfo.js"; // Import necessary functions
-
-// Render the profile information section
+/**
+ * Render the user's profile on the page.
+ * @param {Object} profileData - The data of the user's profile.
+ * @param {boolean} isOwner - Flag indicating if the current user owns the profile.
+ */
 const renderProfilePage = (profileData, isOwner) => {
-    const profileSection = document.getElementById("profile-info");
-    const username = getMyName();
-    profileSection.innerHTML = `
-        <h2>${profileData.name}</h2>
-        <p>${profileData.bio}</p>
-        ${isOwner ? `<p>Welcome back, ${username}</p>` : ""}
-    `;
+  const profileSection = document.getElementById("profile-info");
+
+  const { bio, banner, avatar, name } = profileData;
+  const bannerUrl = banner?.url !== "string" ? banner?.url : null;
+  const avatarUrl = avatar?.url !== "string" ? avatar?.url : null;
+
+  profileSection.style.backgroundImage = bannerUrl ? `url(${bannerUrl})` : "";
+  profileSection.style.backgroundSize = bannerUrl ? "cover" : "";
+  profileSection.style.backgroundPosition = bannerUrl ? "center" : "";
+
+  profileSection.innerHTML = `
+    ${isOwner ? `<p>Welcome back</p>` : ""}    
+    <h2>${name || "Unknown User"}</h2>
+    ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar" class="avatar">` : ""} 
+    ${bio && bio !== "string" ? `<p>${bio}</p>` : ""}
+  `;
 };
 
-// Render the posts section of the profile page
+/**
+ * Render the user's posts on the profile page.
+ * @param {Array} postsData - An array of post data objects.
+ * @param {boolean} isOwner - Flag indicating if the current user owns the posts.
+ */
 const renderPostsPage = (postsData, isOwner) => {
-    const userPostsSection = document.getElementById("user-posts");
-    userPostsSection.innerHTML = ""; // Clear previous posts
+  const userPostsSection = document.getElementById("user-posts");
+  userPostsSection.innerHTML = `<h2>Posts</h2>`;
 
-    const postsHeader = document.createElement("h2");
-    postsHeader.textContent = "Posts"; // Header for posts section
-    userPostsSection.appendChild(postsHeader);
+  const fragment = document.createDocumentFragment();
 
-    postsData.forEach((post) => {
-        const postElement = document.createElement("div");
-        postElement.innerHTML = `
-            <h3>${post.title}</h3>
-            ${post.media ? `<img src="${post.media.url}" alt="${post.media.alt}"> <p>${post.media.alt}</p>` : ""}
-            <p>${post.body}</p>
-            ${post.author ? `<p>Posted by <a href="/profile?username=${post.author.name}">${post.author.name}</a></p>` : ""}
-            ${isOwner ? `
-                <button class="edit-post-btn" data-post-id="${post.id}">Edit</button>
-                <button class="delete-post-btn">Delete</button>
-            ` : ""}
-        `;
-        userPostsSection.appendChild(postElement); // Add post to the posts section
+  postsData.forEach((post) => {
+    const postElement = document.createElement("div");
+    postElement.classList.add("each-post");
+    postElement.id = `post-${post.id}`;
 
-        // Add delete functionality to the delete button
-        const deleteButton = postElement.querySelector('.delete-post-btn');
-        if (deleteButton) {
-            deleteButton.addEventListener('click', () => {
-                deletePost(post.id); // Delete the post on button click
-            });
+    const avatarUrl = post.author?.avatar?.url || "";
+    postElement.innerHTML = `
+      <div class="avatar-name-container">
+        ${
+          avatarUrl
+            ? `<img src="${avatarUrl}" alt="Avatar" class="post-avatar">`
+            : ""
         }
-
-        // Add edit functionality to the edit button
-        const editButton = postElement.querySelector('.edit-post-btn');
-        if (editButton) {
-            editButton.addEventListener('click', () => {
-                const postId = post.id;
-                window.location.href = `/post/edit/${postId}`; // Redirect to edit page
-            });
+        ${
+          post.author
+            ? `<p><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
+            : ""
         }
-    });
+      </div>
+      ${
+        post.media
+          ? `
+        <a href="/post/?id=${post.id}">
+          <img src="${post.media.url}" alt="${post.media.alt}">
+        </a>
+      `
+          : ""
+      }
+      <h3>${post.title}</h3>
+      <p>${post.body}</p>
+      ${
+        isOwner
+          ? `
+        <div class="button-container">
+          <button class="post-btn edit-btn" data-post-id="${post.id}">Edit</button>
+          <button class="post-btn delete-btn" data-post-id="${post.id}">Delete</button>
+        </div>
+      `
+          : ""
+      }
+    `;
+
+    fragment.appendChild(postElement);
+  });
+
+  userPostsSection.appendChild(fragment);
+
+  // Handle event delegation for edit/delete buttons
+  userPostsSection.addEventListener("click", (event) => {
+    const target = event.target;
+    const postId = target.getAttribute("data-post-id");
+
+    if (target.classList.contains("delete-btn")) {
+      deletePost(postId);
+    }
+
+    if (target.classList.contains("edit-btn")) {
+      window.location.href = `/post/edit/${postId}`;
+    }
+  });
 };
 
+/**
+ * Attach event listeners to the update form actions (show form, submit form).
+ */
+const attachProfileEventListeners = () => {
+  const showUpdateButton = document.getElementById("show-update-form");
+  const profileUpdateForm = document.getElementById("profile-update-form");
 
-// Generate the create post and update profile buttons only if the user is the owner
+  if (showUpdateButton) {
+    showUpdateButton.addEventListener("click", showUpdateForm);
+  }
+
+  if (profileUpdateForm) {
+    profileUpdateForm.addEventListener("submit", onUpdateProfile);
+  }
+};
+
+/**
+ * Render the buttons for the profile owner (Create Post, Update Profile).
+ * @param {boolean} isOwner - Flag indicating if the current user owns the profile.
+ */
 const renderOwnerButtons = (isOwner) => {
-    const actionsSection = document.getElementById("actions-section");
+  if (!isOwner) return;
 
-    if (isOwner) {
-        // Create and append the "Create Post" button
-        const createPostButton = document.createElement("button");
-        createPostButton.id = "create-post-btn";
-        createPostButton.textContent = "Create Post";
-        createPostButton.addEventListener("click", () => {
-            window.location.href = "/post/create/";
-        });
-        actionsSection.appendChild(createPostButton);
+  const actionsSection = document.getElementById("actions-section");
+  actionsSection.innerHTML = `
+    <button id="create-post-btn">Create Post</button>
+    <button id="update-profile-btn">Update Profile</button>
+  `;
 
-        // Create and append the "Update Profile" button
-        const updateProfileButton = document.createElement("button");
-        updateProfileButton.id = "update-profile-btn";
-        updateProfileButton.textContent = "Update Profile";
-        updateProfileButton.addEventListener("click", () => {
-            window.location.href = "/profile/update";
-        });
-        actionsSection.appendChild(updateProfileButton);
-    }
+  document.getElementById("create-post-btn").addEventListener("click", () => {
+    window.location.href = "/post/create/";
+  });
+
+  document
+    .getElementById("update-profile-btn")
+    .addEventListener("click", showUpdateForm);
+
+  attachProfileEventListeners();
 };
 
-
-// Handle the profile page logic
+/**
+ * Handle the profile page logic, including fetching profile and posts, and rendering the UI.
+ */
 const handleProfilePage = async () => {
-    try {
-        const currentUser = getNameFromURL(); // Get the current user's name from URL
-        const loggedInUser = getMyName(); // Get the logged-in user's name
-        const isOwner = currentUser === loggedInUser; // Check if the logged-in user is the owner of the profile
+  try {
+    const currentUser = getNameFromURL();
+    const loggedInUser = getMyName();
+    const isOwner = currentUser === loggedInUser;
 
-        const profileData = await readProfile(); // Fetch profile data
-        renderProfilePage(profileData, isOwner); // Render profile data
+    const [profileData, postsData] = await Promise.all([
+      readProfile(currentUser),
+      readPostsByUser(currentUser),
+    ]);
 
-        const postsData = await readPostsByUser(currentUser); // Fetch posts by user
-        renderPostsPage(postsData, isOwner); // Render posts
-
-        renderOwnerButtons(isOwner); // Render buttons for the owner
-    } catch (error) {
-        console.error("Error handling profile page:", error); // Log any errors
-    }
+    renderProfilePage(profileData, isOwner);
+    renderPostsPage(postsData, isOwner);
+    renderOwnerButtons(isOwner);
+  } catch (error) {
+    console.error("Error handling profile page:", error);
+  }
 };
 
-// Invoke the profile page handling function
+// Initialize the profile page
 handleProfilePage();

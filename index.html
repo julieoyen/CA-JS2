@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/public/images/favicon.png">
+    <link rel="icon" type="image/png" href="/public/images/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noroff FED2 JS2 CA</title>
     <script type="module" src="/src/app.js"></script>
@@ -10,14 +10,21 @@
 
   <body>
     <h1>Home</h1>
+    <div id="nav-bar">
+      <!-- Use direct anchor tags for links, styled as buttons via CSS -->
+      <a id="my-profile-link" class="link-btn">My Profile</a>
+      <a href="/auth/login/" class="link-btn">Login</a>
+      <a href="/auth/register/" class="link-btn">Register</a>
+      <a href="/post/create/" class="link-btn">Create Post</a>
 
-    <a id="my-profile-link">My Profile</a>
-    <a href="/auth/login/">Login</a>
-    <a href="/auth/register/">Register</a>
-    <a href="/post/create/">create post</a>
-    <button id="logout-btn">Logout</button>
-  
-    <button id="toggleButton">Displaying all posts</button>
+      <!-- Logout button should remain as a button -->
+      <button id="logout-btn">Logout</button>
+
+      <!-- Button to toggle between displaying all posts and followed posts -->
+      <button id="toggleButton">Displaying all posts</button>
+    </div>
+
+    <!-- Posts container section -->
     <section id="posts-container"></section>
   </body>
 </html>

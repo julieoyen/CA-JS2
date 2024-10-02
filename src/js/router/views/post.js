@@ -1,74 +1,106 @@
 import { getIDFromURL } from "../../utilities/getInfo";
 import { authGuard } from "../../utilities/authGuard";
+import { getKey } from "../../api/auth/key"; // Assuming getKey() is the function to retrieve the token
 
 authGuard();
 
 import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
 
 const postId = getIDFromURL();
-console.log(postId);
 
-// Modify the endpoint to include the _author=true query parameter
+/**
+ * Modifies the API endpoint to include the _author=true query parameter.
+ * @type {string}
+ */
 const endpoint = `${API_SOCIAL_POSTS}/${postId}?_author=true`;
 
-function retrievePost(endpointValue) {
-  fetch(endpointValue, {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Noroff-API-Key': API_KEY,
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWtzZWxfb2xkZWlkZSIsImVtYWlsIjoiYWtzaGVsODc3MDdAc3R1ZC5ub3JvZmYubm8iLCJpYXQiOjE3MjcxMjYxNjh9.kTNufOOgrial4IJ1MjYPrtdj2ecCzzYRcuyE-vRVnkk'
+/**
+ * Retrieves the post data from the API and renders it on the page.
+ * @param {string} endpointValue - The API endpoint to fetch the post data from.
+ * @returns {Promise<void>}
+ */
+async function retrievePost(endpointValue) {
+  try {
+    const token = await getKey(); // Retrieve the Bearer token
+    if (!token) {
+      throw new Error("Token not found");
     }
-  })
-  .then(response => {
+
+    const response = await fetch(endpointValue, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Noroff-API-Key": API_KEY,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
-    return response.json();
-  })
-  .then(data => {
-    const postContainer = document.getElementById('post-container');
-    postContainer.innerHTML = ''; // Clear the container before repopulating
 
-    // Check if the post exists
+    const data = await response.json();
+    const postContainer = document.getElementById("post-container");
+    postContainer.innerHTML = ""; // Clear the container before repopulating
+
     const post = data.data;
-    if (post) {
-      const postDiv = document.createElement('div');
-      postDiv.classList.add('post');
 
-      // Build post content with clickable author name
+    if (post) {
+      const avatarUrl = post.author?.avatar?.url || "";
+
+      // Create a new div for the post and build its HTML structure
+      const postDiv = document.createElement("div");
+      postDiv.classList.add("each-post");
+      postDiv.id = `post-${post.id}`;
+
       let postContent = `
-        <h2>${post.title}</h2>
-        <p>Author: <a href=/profile/?author=${post.author.name}>${post.author.name}</a></p>
+        <div class="avatar-name-container">
+          ${
+            avatarUrl
+              ? `<img src="${avatarUrl}" alt="Avatar" class="post-avatar">`
+              : ""
+          }
+          ${
+            post.author
+              ? `<p><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
+              : ""
+          }
+        </div>
+        ${
+          post.media
+            ? `
+              <a href="/post/?id=${post.id}">
+                <img src="${post.media.url}" alt="${
+                post.media.alt || "Post image"
+              }" class="post-media">
+              </a>
+            `
+            : ""
+        }
+        <h3 class="post-title">${post.title}</h3>
+        <p class="post-body">${post.body}</p>
+        <p><strong>Published on:</strong> ${new Date(
+          post.created
+        ).toLocaleDateString()} ${new Date(
+        post.created
+      ).toLocaleTimeString()}</p>
       `;
 
-      if (post.body) {
-        postContent += `<p>${post.body}</p>`;
-      }
-
-      if (post.media && post.media.url) {
-        postContent += `<img src="${post.media.url}" alt="${post.media.alt || 'Post image'}" style="width: 100%; height: auto;">`;
-      }
-
-      if (post.created) {
-        postContent += `<p><strong>Publish date:</strong> ${new Date(post.created).toLocaleDateString()} ${new Date(post.created).toLocaleTimeString()}</p>`;
-      }
-
+      // Add tags if they exist
       if (post.tags && post.tags.length > 0) {
-        postContent += `<p><strong>Tags:</strong> ${post.tags.join(', ')}</p>`;
+        postContent += `<p><strong>Tags:</strong> ${post.tags.join(", ")}</p>`;
       }
 
       postDiv.innerHTML = postContent;
 
-      // Append the content to the container without wrapping it in a link
+      // Append the post element to the container
       postContainer.appendChild(postDiv);
     } else {
-      postContainer.innerHTML = '<p>Post not found.</p>'; // Handle post not found case
+      postContainer.innerHTML = "<p>Post not found.</p>";
     }
-  })
-  .catch(error => {
-    console.error('There was a problem with the fetch operation:', error);
-  });
+  } catch (error) {
+    // Handle errors in the fetch operation
+  }
 }
 
 // Initial load of the post
