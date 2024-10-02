@@ -52,7 +52,7 @@ const renderPostsPage = (postsData, isOwner) => {
         if (editButton) {
             editButton.addEventListener('click', () => {
                 const postId = post.id;
-                window.location.href = `/post/edit/${postId}`; // Redirect to edit page
+                window.location.href = `/post/edit/?id=${postId}`; // Redirect to edit page
             });
         }
     });
