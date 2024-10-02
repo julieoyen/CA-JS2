@@ -1,10 +1,17 @@
-import { API_SOCIAL_PROFILES } from "../constants"; // Import constants for API key and endpoint
+import { API_SOCIAL_PROFILES } from "../constants";
 import { getMyToken } from "../../utilities/getInfo.js";
-import { getNameFromURL } from "../../utilities/getInfo.js"; // Import utility to retrieve username from URL
-import { headers } from "../../api/headers"; // Adjust the path according to your folder structure
+import { getNameFromURL } from "../../utilities/getInfo.js";
+import { headers } from "../../api/headers";
+
 const token = await getMyToken();
-// Create fetch options including method and headers
-const createFetchOptions = (requestHeaders, token) => {
+
+/**
+ * Creates fetch options including method and headers.
+ *
+ * @param {Headers} requestHeaders - The request headers.
+ * @returns {Object} The fetch options object.
+ */
+const createFetchOptions = (requestHeaders) => {
   return {
     method: "GET",
     headers: requestHeaders,
@@ -12,40 +19,44 @@ const createFetchOptions = (requestHeaders, token) => {
   };
 };
 
-// Make a GET request to the provided URL with given options
+/**
+ * Makes a GET request to the provided URL with given options.
+ *
+ * @async
+ * @param {string} url - The URL to send the request to.
+ * @param {Object} fetchOptions - The options for the fetch request.
+ * @returns {Promise<Object|null>} The response data or null if an error occurs.
+ * @throws {Error} If the request fails.
+ */
 const makeGetRequest = async (url, fetchOptions) => {
   try {
-    const response = await fetch(url, fetchOptions); // Fetch data from API
+    const response = await fetch(url, fetchOptions);
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.statusText}`); // Handle response errors
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
-    const result = await response.json(); // Parse response as JSON
-    return result.data; // Return the data part of the response
+    const result = await response.json();
+    return result.data;
   } catch (error) {
-    console.error("Error fetching data:", error);
-    // Return null or handle error as needed
     return null;
   }
 };
 
-// Fetch the profile data for the currently visited user
+/**
+ * Fetches the profile data for the currently visited user.
+ *
+ * @async
+ * @returns {Promise<Object|null>} The profile data or null if an error occurs.
+ */
 export async function readProfile() {
-  const username = getNameFromURL(); // Get the username from the URL
-  console.log("Retrieved username:", username); // Debug log for username
-
-  const requestHeaders = headers(); // Create request headers
-  requestHeaders.append("Authorization", `Bearer ${token}`); // Append token to headers
-  const fetchOptions = createFetchOptions(requestHeaders, token); // Create fetch options
-
-  // Constructing the fetch URL using the username
+  const username = getNameFromURL();
+  const requestHeaders = headers();
+  requestHeaders.append("Authorization", `Bearer ${token}`);
+  const fetchOptions = createFetchOptions(requestHeaders);
   const fetchUrl = `${API_SOCIAL_PROFILES}/${username}`;
-  console.log("Attempting to fetch profile from the site:", fetchUrl); // Debug log for the constructed URL
 
-  const response = await makeGetRequest(fetchUrl, fetchOptions); // Fetch the profile data
+  const response = await makeGetRequest(fetchUrl, fetchOptions);
   if (!response) {
-    console.error("Failed to fetch profile data"); // Handle if the fetch was unsuccessful
-    return null; // Return null or handle as appropriate
+    return null;
   }
-  console.log("readProfile response:", response); // Log the fetched response
-  return response; // Return the profile data
+  return response;
 }

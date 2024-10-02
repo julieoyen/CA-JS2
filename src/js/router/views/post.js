@@ -1,6 +1,6 @@
 import { getIDFromURL } from "../../utilities/getInfo";
 import { authGuard } from "../../utilities/authGuard";
-import { getKey } from "../../api/auth/key"; // Assuming getKey() is the function to retrieve the token
+import { getKey } from "../../api/auth/key";
 
 authGuard();
 
@@ -16,12 +16,15 @@ const endpoint = `${API_SOCIAL_POSTS}/${postId}?_author=true`;
 
 /**
  * Retrieves the post data from the API and renders it on the page.
+ *
+ * @async
  * @param {string} endpointValue - The API endpoint to fetch the post data from.
- * @returns {Promise<void>}
+ * @returns {Promise<void>} - A promise that resolves when the post data is successfully fetched and rendered.
+ * @throws {Error} If the token is not found or the request fails.
  */
 async function retrievePost(endpointValue) {
   try {
-    const token = await getKey(); // Retrieve the Bearer token
+    const token = await getKey();
     if (!token) {
       throw new Error("Token not found");
     }
@@ -36,19 +39,19 @@ async function retrievePost(endpointValue) {
     });
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error(
+        `Server error: ${response.statusText} (${response.status})`
+      );
     }
 
     const data = await response.json();
     const postContainer = document.getElementById("post-container");
-    postContainer.innerHTML = ""; // Clear the container before repopulating
+    postContainer.innerHTML = "";
 
     const post = data.data;
 
     if (post) {
       const avatarUrl = post.author?.avatar?.url || "";
-
-      // Create a new div for the post and build its HTML structure
       const postDiv = document.createElement("div");
       postDiv.classList.add("each-post");
       postDiv.id = `post-${post.id}`;
@@ -68,13 +71,11 @@ async function retrievePost(endpointValue) {
         </div>
         ${
           post.media
-            ? `
-              <a href="/post/?id=${post.id}">
+            ? `<a href="/post/?id=${post.id}">
                 <img src="${post.media.url}" alt="${
                 post.media.alt || "Post image"
               }" class="post-media">
-              </a>
-            `
+               </a>`
             : ""
         }
         <h3 class="post-title">${post.title}</h3>
@@ -86,22 +87,22 @@ async function retrievePost(endpointValue) {
       ).toLocaleTimeString()}</p>
       `;
 
-      // Add tags if they exist
       if (post.tags && post.tags.length > 0) {
         postContent += `<p><strong>Tags:</strong> ${post.tags.join(", ")}</p>`;
       }
 
       postDiv.innerHTML = postContent;
-
-      // Append the post element to the container
       postContainer.appendChild(postDiv);
     } else {
       postContainer.innerHTML = "<p>Post not found.</p>";
     }
   } catch (error) {
-    // Handle errors in the fetch operation
+    const postContainer = document.getElementById("post-container");
+    postContainer.innerHTML = `<p>Error loading post: ${error.message}</p>`;
   }
 }
 
-// Initial load of the post
+/**
+ * Calls the retrievePost function to fetch and display the post data.
+ */
 retrievePost(endpoint);
