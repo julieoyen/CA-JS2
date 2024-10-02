@@ -1,51 +1,46 @@
-import { API_SOCIAL_POSTS } from "../constants";
-import { headers } from "../headers";
-import { getKey } from "../auth/key";
+import { getIDFromURL } from "../../utilities/getInfo";
+import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
+import { getMyToken } from "../../utilities/getInfo";
+import { headers } from "../../api/headers";
+const postId = getIDFromURL();
+const token = getMyToken()
 
-export async function updatePost(id, { title, body, tags, media }) {
-  console.log("updatePost function called");
-  const apiUrl = `${API_SOCIAL_POSTS}/${id}`;
-  const accessToken = await getKey();
-  const apiKeyHeader = headers();
-
-  const patchHeaders = new Headers({
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${accessToken}`,
-  });
-  const [apiKey, apiValue] = apiKeyHeader.entries().next().value;
-  patchHeaders.append(apiKey, apiValue);
-
-  const updatedPostData = {
-    title,
-    body,
-    tags: tags.length ? tags : [], // Ensure tags is always an array
-  };
-
-  if (media) {
-    updatedPostData.media = {
-      url: media,
-      alt: altMedia || "Image alt text", // Consider allowing user to edit this
+// Function to handle form submission and send updated data to the API
+export async function submitEditForm(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+  
+// Retrieve the Bearer token
+  
+    const updatedPostData = {
+      title: document.getElementById('title').value,
+      body: document.getElementById('body').value,
+      tags: document.getElementById('tags').value.split(',').map(tag => tag.trim()),
+      media: {
+        url: document.getElementById('image').value,
+        alt: document.getElementById('imageAlt').value,
+      },
     };
-  }
-
-  console.log("Updated post data:", updatedPostData);
-
-  try {
-    console.log("About to send request to API...");
-    const response = await fetch(apiUrl, {
-      method: "PATCH",
-      headers: patchHeaders,
-      body: JSON.stringify(updatedPostData),
-    });
-
-    if (response.ok) {
-      const responseData = await response.json();
-      console.log("Post updated successfully!", responseData);
-    } else {
-      throw new Error(`Error updating post: ${response.statusText}`);
+  
+    try {
+      const response = await fetch(`${API_SOCIAL_POSTS}/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,     // Set the Bearer token
+          'X-Noroff-API-Key': API_KEY,            // Ensure correct API key header
+          'Content-Type': 'application/json',
+          ...headers(),
+        },
+        body: JSON.stringify(updatedPostData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update post');
+      }
+  
+      const updatedPost = await response.json();
+      console.log('Post updated successfully:', updatedPost);
+      // Optionally, redirect or give feedback to the user
+    } catch (error) {
+      console.error('Error updating post:', error);
     }
-  } catch (error) {
-    console.error("Error updating post:", error);
-    throw error;
   }
-}

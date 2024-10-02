@@ -1,74 +1,54 @@
-import { updatePost } from "../../api/post/update";
-import { API_SOCIAL_POSTS } from "../../api/constants";
+import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
+import { headers } from "../../api/headers";
+import { getIDFromURL, getMyToken } from "../../utilities/getInfo";
 
-/**
- * Handles the update post form submission event.
- *
- * @async
- * @param {Event} event - The update post form submission event.
- * @returns {void}
- */
-export async function onUpdatePost(event) {
-  if (event) {
-    event.preventDefault();
-  }
 
-  const form = document.forms.editPost;
-  const url = new URL(window.location.href);
-  const postId = url.searchParams.get("id");
-  console.log("postId: ", postId);
 
-  if (!postId) {
-    console.error("Post ID is missing");
-    return;
-  }
+const targetId = getIDFromURL();
+const endpoint = API_SOCIAL_POSTS + "/" + targetId;
+console.log(endpoint);
 
-  // Retrieve the original post data
+// Function to fetch post data from the API and populate the form
+export async function onUpdatePost(postId) {
+  const token = getMyToken(); // Retrieve the Bearer token
+
   try {
-    const response = await fetch(`${API_SOCIAL_POSTS}/${postId}`);
-    const originalData = await response.json();
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,      // Set the Bearer token
+        'X-Noroff-API-Key': API_KEY,             // Set the API key
+        ...headers(),
+      },
+    });
 
-    // Populate the form fields with the original post data
-    const titleInput = form.title;
-    const bodyInput = form.body;
-    const tagsInput = form.tags;
-    const imageInput = form.image;
-
-    titleInput.value = originalData.title;
-    bodyInput.value = originalData.body;
-    tagsInput.value = originalData.tags ? originalData.tags.join(", ") : "";
-    imageInput.value = originalData.image;
-
-    if (event) {
-      // If this is a form submission event, proceed with the update
-      const title = titleInput.value.trim();
-      const body = bodyInput.value.trim();
-      const tags = tagsInput.value.trim();
-      const image = imageInput.value.trim();
-
-      if (!title || !body) {
-        alert("Please enter a title and body for your post.");
-        return;
-      }
-
-      try {
-        await updatePost(postId, {
-          title,
-          body,
-          tags,
-          media: image,
-        });
-        alert("Post updated successfully!");
-        window.location.href = `/post/${postId}`; // Redirect to the updated post
-      } catch (error) {
-        alert("Error updating post: " + error.message);
-      }
+    if (!response.ok) {
+      throw new Error('Failed to fetch post data');
     }
+
+    const postData = await response.json();
+    populateForm(postData.data); // Accessing the 'data' property in the response
   } catch (error) {
-    console.error("Error retrieving original post data:", error);
-    alert("Failed to load post data.");
+    console.error('Error fetching post data:', error);
   }
 }
 
-// Call onUpdatePost when the page loads to populate the form
-onUpdatePost();
+// Function to populate the form with the post data
+function populateForm(post) {
+  document.getElementById('title').value = post.title;
+  document.getElementById('body').value = post.body;
+  document.getElementById('tags').value = post.tags.join(', ');
+  document.getElementById('image').value = post.media?.url || ''; // Assuming 'media.url' is the image URL
+  document.getElementById('imageAlt').value = post.media?.alt || ''; // Assuming 'media.alt' is the alt text
+}
+
+
+
+// Call this when the page loads to fetch and display the post data
+export async function fetchPostData() {
+  const postId = getIDFromURL(); // Define how you're getting the post ID
+  await onUpdatePost(postId); // Call the update function to fetch and populate the form
+}
+
+// Example of how you could call fetchPostData on page load
+fetchPostData();
