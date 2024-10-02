@@ -3,15 +3,13 @@ import router from "./js/router";
 import { setLogoutListener } from "./js/ui/global/logout";
 import { addFavicon } from "./js/utilities/linkFavIcon";
 
-
-addFavicon()
+addFavicon();
 
 /**
  * Initializes the application.
  *
  * @returns {void}
  */
-
 
 await router(window.location.pathname);
 
