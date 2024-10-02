@@ -1,17 +1,22 @@
 import { authGuard } from "../../utilities/authGuard";
-authGuard();
-
-import { getMyName } from "../../utilities/getInfo.js";
-const myName = getMyName();
-console.log()
-const myProfileLink = document.getElementById("my-profile-link");
-
-// Set the href attribute
-myProfileLink.href = `/profile/?author=${myName}`; // Replace with your desired URL
-
+import { getMyName, getMyToken } from "../../utilities/getInfo.js";
 import { API_SOCIAL_POSTS, API_KEY, API_SOCIAL_POSTS_FOLLOWING } from "../../api/constants";
+import { deletePost } from "../../api/post/delete.js";
+
+
 
 let endpoint = API_SOCIAL_POSTS+"?_author=true";
+const myName = getMyName();
+const token = getMyToken();
+console.log(token)
+const myProfileLink = document.getElementById("my-profile-link");
+myProfileLink.href = `/profile/?author=${myName}`;
+
+
+authGuard();
+
+console.log(myName)
+
 
 // Function to retrieve and display posts from the specified endpoint
 function retrievePosts(endpointValue) {
@@ -20,7 +25,7 @@ function retrievePosts(endpointValue) {
     headers: {
       'Content-Type': 'application/json',
       'X-Noroff-API-Key': API_KEY,
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWtzZWxfb2xkZWlkZSIsImVtYWlsIjoiYWtzaGVsODc3MDdAc3R1ZC5ub3JvZmYubm8iLCJpYXQiOjE3MjcxMjYxNjh9.kTNufOOgrial4IJ1MjYPrtdj2ecCzzYRcuyE-vRVnkk'
+      'Authorization': `Bearer ${token}`
     }
   })
   .then(response => {
@@ -32,52 +37,60 @@ function retrievePosts(endpointValue) {
   .then(data => {
     const postsContainer = document.getElementById('posts-container');
     postsContainer.innerHTML = ''; // Clear the container before repopulating
-
+  
     // Populate the container with posts
     data.data.forEach(post => {
       if (post.title) {
         const postDiv = document.createElement('div');
         postDiv.classList.add('post');
-
         // Create a clickable anchor element
         const postLink = document.createElement('a');
         // Change the href to include the post ID as part of the path, not as a query parameter
         postLink.href = `/post/?id=${post.id}`;
-
+  
         postLink.style.textDecoration = 'none'; // Remove underline for styling, optional
         postLink.style.color = 'inherit'; // Maintain default text color, optional
-
+  
+        // Create the content for the post
         let postContent = 
         `<h2>${post.title}</h2>
          <p>Author: <a href=/profile/?author=${post.author.name}>${post.author.name}</a></p>`;
-
+  
         if (post.body) {
           postContent += `<p>${post.body}</p>`;
         }
-
-        // DELETE BUTTON
-        if (myName ==  post.author.name) {
-          postContent += `<button id="delete-button" onclick="deletePost(${post.id})">delete post ${post.id}</button>`
-        }
-
-
+  
+        // Append media if it exists
         if (post.media && post.media.url) {
           postContent += `<img src="${post.media.url}" alt="${post.media.alt || 'Post image'}" style="width: 100%; height: auto;">`;
         }
-
+  
         if (post.created) {
           postContent += `<p><strong>Publish date:</strong> ${new Date(post.created).toLocaleDateString()} ${new Date(post.created).toLocaleTimeString()}</p>`;
         }
-
+  
         if (post.tags && post.tags.length > 0) {
           postContent += `<p><strong>Tags:</strong> ${post.tags.join(', ')}</p>`;
         }
-
+  
+        // Set the post content
         postDiv.innerHTML = postContent;
+  
+        if (myName === post.author.name) {
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = `delete post ${post.id}`;
+          deleteButton.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent the click event from bubbling up to the anchor
+            event.preventDefault(); // Prevent the default anchor behavior
+            deletePost(post.id); // Call deletePost function
+          });
+          postDiv.appendChild(deleteButton); // Append the delete button
+        }
+        
 
         // Append the content inside the link
         postLink.appendChild(postDiv);
-
+  
         // Append the link to the container
         postsContainer.appendChild(postLink);
       }
@@ -96,5 +109,4 @@ document.getElementById('toggleButton').addEventListener('click', () => {
   document.getElementById('toggleButton').innerText = 
     (endpoint === API_SOCIAL_POSTS_FOLLOWING) ? 'Displaying followed posts' : 'Displaying all posts';
 
-  retrievePosts(endpoint);
 });
