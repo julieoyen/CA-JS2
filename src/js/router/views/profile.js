@@ -111,7 +111,7 @@ const renderPostsPage = (postsData, isOwner) => {
     }
 
     if (target.classList.contains("edit-btn")) {
-      window.location.href = `/post/edit/${postId}`;
+      window.location.href = `/post/edit/?id=${postId}`;
     }
   });
 };
