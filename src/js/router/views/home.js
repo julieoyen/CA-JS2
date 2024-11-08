@@ -1,8 +1,8 @@
-import { authGuard } from "../../utilities/authGuard";
-import { getMyName } from "../../utilities/getInfo.js";
-import { getKey } from "../../api/auth/key";
-import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
-import { deletePost } from "../../api/post/delete.js";
+import { authGuard } from '../../utilities/authGuard';
+import { getMyName } from '../../utilities/getInfo.js';
+import { getKey } from '../../api/auth/key';
+import { API_SOCIAL_POSTS, API_KEY } from '../../api/constants';
+import { deletePost } from '../../api/post/delete.js';
 
 /**
  * Fetches and displays social posts, allowing the user to edit or delete posts.
@@ -16,10 +16,24 @@ import { deletePost } from "../../api/post/delete.js";
  * @throws {Error} If the authentication token is missing or the request fails.
  */
 
-let endpoint = API_SOCIAL_POSTS + "?_author=true&limit=12";
+let endpoint = API_SOCIAL_POSTS + '?_author=true&limit=12';
 const myName = getMyName();
-const myProfileLink = document.getElementById("my-profile-link");
+const myProfileLink = document.getElementById('my-profile-link');
 myProfileLink.href = `/profile/?author=${myName}`;
+
+const searchButton = document.getElementById("search-button");
+const searchField = document.getElementById("searchbar-field");
+
+searchButton.addEventListener("click", () => {
+  searchField.classList.toggle("hidden");
+});
+
+// Close search bar when clicked outside
+window.addEventListener("click", (e) => {
+  if (!searchField.contains(e.target) && !searchButton.contains(e.target)) {
+    searchField.classList.add("hidden");
+  }
+});
 
 authGuard();
 
@@ -36,45 +50,48 @@ async function retrievePosts(endpointValue) {
     const token = await getKey();
 
     if (!token) {
-      throw new Error("Token not found");
+      throw new Error('Token not found');
     }
 
     const response = await fetch(endpointValue, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        "X-Noroff-API-Key": API_KEY,
+        'Content-Type': 'application/json',
+        'X-Noroff-API-Key': API_KEY,
         Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch posts.");
+      throw new Error('Failed to fetch posts.');
     }
 
     const data = await response.json();
-    const postsContainer = document.getElementById("posts-container");
-    postsContainer.innerHTML = "";
+    const postsContainer = document.getElementById('posts-container');
+    postsContainer.innerHTML = '';
 
     data.data.forEach((post) => {
       if (post.title) {
-        const postElement = document.createElement("div");
-        postElement.classList.add("each-post");
+        const postElement = document.createElement('div');
+        postElement.classList.add('each-post');
 
-        const avatarUrl = post.author?.avatar?.url || "";
-        const isOwner = myName === post.author;
+        const avatarUrl = post.author?.avatar?.url || '';
+        const isOwner = myName === post.author?.name;
 
         postElement.innerHTML = `
-          <div class="avatar-name-container">
+        <div>
+          <div class="avatar-name-container flex flex-row">
             ${
               avatarUrl
-                ? `<img src="${avatarUrl}" alt="Avatar" class="post-avatar">`
-                : ""
+                ? `<a class="pb-3" href="/post/?id=${post.id}">
+                <img class=" h-10 w-10 object-cover cursor-pointer rounded-full" src="${avatarUrl}" alt="Avatar" class="post-avatar"> 
+                </a>`
+                : ''
             }
             ${
               post.author
-                ? `<p><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
-                : ""
+                ? `<p class="pl-2"><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
+                : ''
             }
           </div>
           ${
@@ -82,19 +99,19 @@ async function retrievePosts(endpointValue) {
               ? `<a href="/post/?id=${post.id}">
                   <img src="${post.media.url}" alt="${post.media.alt}" class="post-media">
                  </a>`
-              : ""
+              : ''
           }
           <h3 class="post-title">${post.title}</h3>
           <p class="post-body">${post.body}</p>
           <p><strong>Published on:</strong> ${new Date(
             post.created
           ).toLocaleDateString()} ${new Date(
-          post.created
-        ).toLocaleTimeString()}</p>
+            post.created
+          ).toLocaleTimeString()}</p>
           ${
             post.tags && post.tags.length > 0
-              ? `<p><strong>Tags:</strong> ${post.tags.join(", ")}</p>`
-              : ""
+              ? `<p><strong>Tags:</strong> ${post.tags.join(', ')}</p>`
+              : ''
           }
           ${
             isOwner
@@ -102,24 +119,25 @@ async function retrievePosts(endpointValue) {
                    <button class="post-btn edit-btn" data-post-id="${post.id}">Edit</button>
                    <button class="post-btn delete-btn" data-post-id="${post.id}">Delete</button>
                  </div>`
-              : ""
+              : ''
           }
+          <div>
         `;
 
         postsContainer.appendChild(postElement);
 
-        const deleteButton = postElement.querySelector(".delete-btn");
+        const deleteButton = postElement.querySelector('.delete-btn');
         if (deleteButton) {
-          deleteButton.addEventListener("click", (event) => {
+          deleteButton.addEventListener('click', (event) => {
             event.preventDefault();
             event.stopPropagation();
             deletePost(post.id);
           });
         }
 
-        const editButton = postElement.querySelector(".edit-btn");
+        const editButton = postElement.querySelector('.edit-btn');
         if (editButton) {
-          editButton.addEventListener("click", (event) => {
+          editButton.addEventListener('click', (event) => {
             event.preventDefault();
             window.location.href = `/post/edit/?id=${post.id}`;
           });
@@ -127,7 +145,7 @@ async function retrievePosts(endpointValue) {
       }
     });
   } catch (error) {
-    throw new Error("Error retrieving posts: " + error.message);
+    throw new Error('Error retrieving posts: ' + error.message);
   }
 }
 

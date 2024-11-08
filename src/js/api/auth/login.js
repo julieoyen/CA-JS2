@@ -1,5 +1,5 @@
-import { API_AUTH_LOGIN } from "../constants";
-import { headers } from "../headers";
+import { API_AUTH_LOGIN } from '../constants';
+import { headers } from '../headers';
 
 /**
  * Logs in a user with the provided email and password.
@@ -15,10 +15,10 @@ import { headers } from "../headers";
 export async function login({ email, password }) {
   try {
     const response = await fetch(API_AUTH_LOGIN, {
-      method: "POST",
+      method: 'POST',
       headers: {
         ...headers(),
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     });

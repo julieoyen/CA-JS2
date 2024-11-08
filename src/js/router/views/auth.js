@@ -1,1 +1,1 @@
-alert("Auth Index Page");
+alert('Auth Index Page');

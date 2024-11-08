@@ -1,17 +1,178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/public/images/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noroff FED2 JS2 CA</title>
     <script type="module" src="/src/app.js"></script>
   </head>
 
   <body>
-    <h1>Home</h1>
+    <nav
+      id="nav-bar"
+      class="flex items-center justify-between bg-primary px-2 flex-wrap relative"
+    >
+      <div
+        class="flex items-center justify-between bg-primary px-2 flex-wrap relative"
+      ></div>
+      <!-- Logo -->
+      <div class="flex items-center flex-shrink-0 text-white">
+       <a href="/"><img
+          class="lg:h-24 lg:w-24 md:h-16 md:w-16 w-14 h-14 mr-5"
+          src="/public/images/some-logo.png"
+          alt="Logo"
+        /></a>
+      </div>
+      <!-- Search Menu (Magnifying Glass on left side) -->
+      <div id="search-menu" class="relative flex items-center lg:ml-auto">
+        <!-- Search Bar (Visible on large screens) -->
+        <div
+          id="searchbar-field"
+          class="hidden lg:block lg:justify-end lg:ml-auto w-10 min-w-[180px] overflow-auto rounded-md border border-gray-300 bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 max-h-[300px] overflow-y-auto mx-auto lg:w-[350px]"
+        >
+          <ul
+            role="searchbox"
+            aria-labelledby="search-field-button"
+            data-toggle="search-field"
+            data-placement="bottom"
+          >
+            <div
+              class="flex px-4 py-3 lg:rounded-md border-2 border-primary overflow-hidden max-w-md mx-auto font-[sans-serif]"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 192.904 192.904"
+                width="16px"
+                class="fill-gray-600 mr-3 rotate-90"
+              >
+                <path
+                  d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+                ></path>
+              </svg>
+              <input
+                type="text"
+                placeholder="Search Something..."
+                class="w-full outline-none bg-transparent text-gray-600 text-sm"
+              />
+            </div>
+          </ul>
+        </div>
+
+        <!-- Search Button (Visible on small screens) -->
+        <button
+          type="button"
+          class="relative flex rounded-full text-sm focus:outline-none focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 lg:hidden"
+          id="search-button"
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          <span class="absolute -inset-1.5"></span>
+          <span class="sr-only">Open search field</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 192.904 192.904"
+            width="16px"
+            class="fill-white mr-3 rotate-90"
+          >
+            <path
+              d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      <div class="block lg:mr-9 mr-3">
+        <div id="hamburger-menu" class="relative ml-3">
+          <div>
+            
+          </div>
+        </div>
+
+        <!-- Dropdown Menu -->
+        <button
+  type="button"
+  class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+  id="user-menu-button"
+  aria-expanded="false"
+  aria-haspopup="true"
+>
+  <span class="absolute -inset-1.5"></span>
+  <span class="sr-only">Open user menu</span>
+  <img
+    id="user-avatar"
+    class="h-8 w-8 lg:h-16 lg:w-16 rounded-full object-cover"
+  />
+</button>
+        <div
+          id="navbar-links"
+          class="hidden absolute mt-2 right-0 z-20 min-w-[180px] overflow-auto rounded-md border border-gray-300 bg-white p-2 shadow-md focus:outline-none max-h-[300px] overflow-y-auto"
+        >
+          <ul
+            role="navigation"
+            aria-labelledby="user-menu-button"
+            data-toggle="user-profile-menu"
+            data-placement="bottom"
+          >
+            <li
+              role="option"
+              aria-label="Go to My Profile"
+              class="cursor-pointer text-gray-800 flex w-full text-sm items-center rounded p-3 transition-colors hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                class="w-5 h-5 text-gray-400"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-5.5-2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 12a5.99 5.99 0 0 0-4.793 2.39A6.483 6.483 0 0 0 10 16.5a6.483 6.483 0 0 0 4.793-2.11A5.99 5.99 0 0 0 10 12Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <a
+                id="my-profile-link"
+                class="link-btn text-gray-800 font-semibold ml-2"
+                >My Profile</a
+              >
+            </li>
+            <hr class="my-2 border-slate-200" role="menuitem" />
+              <li
+                id="logout-btn"
+                role="option"
+                aria-label="Sign Out of your account"
+                class="cursor-pointer text-gray-800 flex w-full text-sm items-center rounded p-3 transition-colors hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-100"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="w-5 h-5 text-gray-400"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z"
+                    clip-rule="evenodd"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <p class="text-gray-800 font-semibold ml-2">Sign Out</p>
+              </li>
+            </a>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div id="nav-bar">
-      <a id="my-profile-link" class="link-btn">My Profile</a>
+
       <a href="/auth/login/" class="link-btn">Login</a>
       <a href="/auth/register/" class="link-btn">Register</a>
       <a href="/post/create/" class="link-btn">Create Post</a>
@@ -19,6 +180,28 @@
     </div>
 
     <!-- Posts container section -->
-    <section id="posts-container"></section>
+    <section>
+     <div class="container mx-auto px-4">
+      <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4" ></div>
+       </div>
+    </section>
+    <!-- Pagination Controls -->
+<div id="pagination-controls" class="flex justify-center space-x-4 mt-8">
+  <button
+    id="prev-page"
+    class="btn bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700 disabled:opacity-50"
+    disabled
+  >
+    Previous
+  </button>
+  <span id="page-number" class="text-lg text-gray-800">Page 1</span>
+  <button
+    id="next-page"
+    class="btn bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+  >
+    Next
+  </button>
+</div>
+
   </body>
 </html>

@@ -1,5 +1,5 @@
-import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
-import { getMyToken } from "../../utilities/getInfo.js";
+import { API_SOCIAL_POSTS, API_KEY } from '../../api/constants';
+import { getMyToken } from '../../utilities/getInfo.js';
 
 /**
  * Handles the deletion of a post.
@@ -12,28 +12,28 @@ import { getMyToken } from "../../utilities/getInfo.js";
 
 export async function deletePost(id) {
   const token = getMyToken();
-  const confirmed = confirm("Are you sure you want to delete this post?");
+  const confirmed = confirm('Are you sure you want to delete this post?');
 
   if (!confirmed) {
     return;
   }
 
   fetch(`${API_SOCIAL_POSTS}/${id}`, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
-      "X-Noroff-API-Key": API_KEY,
+      'Content-Type': 'application/json',
+      'X-Noroff-API-Key': API_KEY,
       Authorization: `Bearer ${token}`,
     },
   })
     .then((response) => {
       if (response.status === 204) {
-        alert("Post deleted");
+        alert('Post deleted');
         return;
       }
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
       return response.json();
@@ -42,6 +42,6 @@ export async function deletePost(id) {
       location.reload();
     })
     .catch((error) => {
-      throw new Error("Error deleting post: " + error.message);
+      throw new Error('Error deleting post: ' + error.message);
     });
 }

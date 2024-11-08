@@ -1,4 +1,4 @@
-import { updateProfile } from "../../api/profile/update";
+import { updateProfile } from '../../api/profile/update';
 
 /**
  * Handles live profile updates.
@@ -17,7 +17,7 @@ export async function onUpdateProfile(event) {
   try {
     const updatedProfile = await updateProfile(bio, { avatar, banner });
     renderProfilePage(updatedProfile, true);
-    document.getElementById("update-profile-form").style.display = "none";
+    document.getElementById('update-profile-form').style.display = 'none';
   } catch (error) {
     // Handle error
   }
@@ -27,11 +27,11 @@ export async function onUpdateProfile(event) {
  * Displays the profile update form and attaches cancel button functionality.
  */
 export function showUpdateForm() {
-  const updateForm = document.getElementById("update-profile-form");
-  updateForm.style.display = "block";
+  const updateForm = document.getElementById('update-profile-form');
+  updateForm.style.display = 'block';
 
-  const cancelBtn = document.getElementById("cancel-update-btn");
-  cancelBtn.addEventListener("click", () => {
-    updateForm.style.display = "none";
+  const cancelBtn = document.getElementById('cancel-update-btn');
+  cancelBtn.addEventListener('click', () => {
+    updateForm.style.display = 'none';
   });
 }

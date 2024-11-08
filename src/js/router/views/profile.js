@@ -1,8 +1,8 @@
-import { getMyName, getNameFromURL } from "../../utilities/getInfo";
-import { readPostsByUser } from "../../api/post/read";
-import { readProfile } from "../../api/profile/read";
-import { updateProfile } from "../../api/profile/update";
-import { deletePost } from "../../api/post/delete";
+import { getMyName, getNameFromURL } from '../../utilities/getInfo';
+import { readPostsByUser } from '../../api/post/read';
+import { readProfile } from '../../api/profile/read';
+import { updateProfile } from '../../api/profile/update';
+import { deletePost } from '../../api/post/delete';
 
 /**
  * Render the user's profile on the page.
@@ -10,33 +10,33 @@ import { deletePost } from "../../api/post/delete";
  * @param {boolean} isOwner - Flag indicating if the current user owns the profile.
  */
 const renderProfilePage = (profileData, isOwner) => {
-  const profileSection = document.getElementById("profile-info");
-  const username = getMyName() || "Guest";
+  const profileSection = document.getElementById('profile-info');
+  const username = getMyName() || 'Guest';
 
   const bio =
-    profileData.bio && profileData.bio !== "string" ? profileData.bio : null;
+    profileData.bio && profileData.bio !== 'string' ? profileData.bio : null;
   const bannerUrl =
-    profileData.banner?.url && profileData.banner.url !== "string"
+    profileData.banner?.url && profileData.banner.url !== 'string'
       ? profileData.banner.url
       : null;
   const avatarUrl =
-    profileData.avatar?.url && profileData.avatar.url !== "string"
+    profileData.avatar?.url && profileData.avatar.url !== 'string'
       ? profileData.avatar.url
       : null;
 
   if (bannerUrl) {
     profileSection.style.backgroundImage = `url(${bannerUrl})`;
-    profileSection.style.backgroundSize = "cover";
-    profileSection.style.backgroundPosition = "center";
+    profileSection.style.backgroundSize = 'cover';
+    profileSection.style.backgroundPosition = 'center';
   } else {
-    profileSection.style.backgroundImage = "";
+    profileSection.style.backgroundImage = '';
   }
 
   profileSection.innerHTML = `  
-    ${isOwner ? `<p>Welcome back</p>` : ""}    
-    <h2>${profileData.name || "Unknown User"}</h2>
-    ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar" class="avatar">` : ""} 
-    ${bio ? `<p>${bio}</p>` : ""}
+    ${isOwner ? `<p>Welcome back</p>` : ''}    
+    <h2>${profileData.name || 'Unknown User'}</h2>
+    ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar" class="avatar">` : ''} 
+    ${bio ? `<p>${bio}</p>` : ''}
   `;
 };
 
@@ -46,18 +46,18 @@ const renderProfilePage = (profileData, isOwner) => {
  * @param {boolean} isOwner - Flag indicating if the current user owns the posts.
  */
 const renderPostsPage = (postsData, isOwner) => {
-  const userPostsSection = document.getElementById("user-posts");
-  userPostsSection.innerHTML = "";
+  const userPostsSection = document.getElementById('user-posts');
+  userPostsSection.innerHTML = '';
 
-  const postsHeader = document.createElement("h2");
-  postsHeader.textContent = "Posts";
+  const postsHeader = document.createElement('h2');
+  postsHeader.textContent = 'Posts';
   userPostsSection.appendChild(postsHeader);
 
   const fragment = document.createDocumentFragment();
 
   postsData.forEach((post) => {
-    const postElement = document.createElement("div");
-    const avatarUrl = post.author?.avatar?.url || "";
+    const postElement = document.createElement('div');
+    const avatarUrl = post.author?.avatar?.url || '';
 
     postElement.innerHTML = `
       <div class="each-post" id="post-${post.id}">
@@ -65,12 +65,12 @@ const renderPostsPage = (postsData, isOwner) => {
           ${
             avatarUrl
               ? `<img src="${avatarUrl}" alt="Avatar" class="post-avatar">`
-              : ""
+              : ''
           }
           ${
             post.author
               ? `<p><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
-              : ""
+              : ''
           }
         </div>
         ${
@@ -80,7 +80,7 @@ const renderPostsPage = (postsData, isOwner) => {
             <img src="${post.media.url}" alt="${post.media.alt}">
           </a>
         `
-            : ""
+            : ''
         }
         <h3>${post.title}</h3>
         <p>${post.body}</p>
@@ -92,7 +92,7 @@ const renderPostsPage = (postsData, isOwner) => {
             <button class="post-btn delete-btn" data-post-id="${post.id}">Delete</button>
           </div>
         `
-            : ""
+            : ''
         }
       </div>
     `;
@@ -102,15 +102,15 @@ const renderPostsPage = (postsData, isOwner) => {
 
   userPostsSection.appendChild(fragment);
 
-  userPostsSection.addEventListener("click", (event) => {
+  userPostsSection.addEventListener('click', (event) => {
     const target = event.target;
-    const postId = target.getAttribute("data-post-id");
+    const postId = target.getAttribute('data-post-id');
 
-    if (target.classList.contains("delete-btn")) {
+    if (target.classList.contains('delete-btn')) {
       deletePost(postId);
     }
 
-    if (target.classList.contains("edit-btn")) {
+    if (target.classList.contains('edit-btn')) {
       window.location.href = `/post/edit/?id=${postId}`;
     }
   });
@@ -121,21 +121,21 @@ const renderPostsPage = (postsData, isOwner) => {
  * @param {Object} profileData - The data of the user's profile.
  */
 const showUpdateForm = (profileData) => {
-  const updateForm = document.getElementById("update-profile-form");
+  const updateForm = document.getElementById('update-profile-form');
 
-  if (updateForm.style.display === "block") {
-    updateForm.style.display = "none";
+  if (updateForm.style.display === 'block') {
+    updateForm.style.display = 'none';
   } else {
-    document.getElementById("avatar-url").value = profileData.avatar?.url || "";
-    document.getElementById("banner-url").value = profileData.banner?.url || "";
-    document.getElementById("bio").value = profileData.bio || "";
+    document.getElementById('avatar-url').value = profileData.avatar?.url || '';
+    document.getElementById('banner-url').value = profileData.banner?.url || '';
+    document.getElementById('bio').value = profileData.bio || '';
 
-    updateForm.style.display = "block";
+    updateForm.style.display = 'block';
   }
 
-  const cancelBtn = document.getElementById("cancel-update-btn");
-  cancelBtn.addEventListener("click", () => {
-    updateForm.style.display = "none";
+  const cancelBtn = document.getElementById('cancel-update-btn');
+  cancelBtn.addEventListener('click', () => {
+    updateForm.style.display = 'none';
   });
 };
 
@@ -146,19 +146,19 @@ const showUpdateForm = (profileData) => {
 const handleProfileUpdate = async (event) => {
   event.preventDefault();
 
-  const bio = document.getElementById("bio").value;
-  const avatar = document.getElementById("avatar-url").value;
-  const banner = document.getElementById("banner-url").value;
+  const bio = document.getElementById('bio').value;
+  const avatar = document.getElementById('avatar-url').value;
+  const banner = document.getElementById('banner-url').value;
 
   try {
     await updateProfile(bio, { avatar, banner });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     setTimeout(() => {
       location.reload();
     }, 500);
   } catch (error) {
-    console.error("Error updating profile:", error);
+    console.error('Error updating profile:', error);
   }
 };
 
@@ -168,28 +168,28 @@ const handleProfileUpdate = async (event) => {
  * @param {Object} profileData - The data of the user's profile.
  */
 const renderOwnerButtons = (isOwner, profileData) => {
-  const actionsSection = document.getElementById("actions-section");
+  const actionsSection = document.getElementById('actions-section');
 
   if (isOwner) {
-    const createPostButton = document.createElement("button");
-    createPostButton.id = "create-post-btn";
-    createPostButton.textContent = "Create Post";
-    createPostButton.addEventListener("click", () => {
-      window.location.href = "/post/create/";
+    const createPostButton = document.createElement('button');
+    createPostButton.id = 'create-post-btn';
+    createPostButton.textContent = 'Create Post';
+    createPostButton.addEventListener('click', () => {
+      window.location.href = '/post/create/';
     });
     actionsSection.appendChild(createPostButton);
 
-    const updateProfileButton = document.createElement("button");
-    updateProfileButton.id = "update-profile-btn";
-    updateProfileButton.textContent = "Update Profile";
-    updateProfileButton.addEventListener("click", () => {
+    const updateProfileButton = document.createElement('button');
+    updateProfileButton.id = 'update-profile-btn';
+    updateProfileButton.textContent = 'Update Profile';
+    updateProfileButton.addEventListener('click', () => {
       showUpdateForm(profileData);
     });
     actionsSection.appendChild(updateProfileButton);
 
     document
-      .getElementById("profile-update-form")
-      .addEventListener("submit", handleProfileUpdate);
+      .getElementById('profile-update-form')
+      .addEventListener('submit', handleProfileUpdate);
   }
 };
 
@@ -211,7 +211,7 @@ const handleProfilePage = async () => {
     renderPostsPage(postsData, isOwner);
     renderOwnerButtons(isOwner, profileData);
   } catch (error) {
-    console.error("Error handling profile page:", error);
+    console.error('Error handling profile page:', error);
   }
 };
 
