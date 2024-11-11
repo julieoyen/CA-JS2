@@ -4,6 +4,7 @@ import { readProfile } from '../../api/profile/read';
 import { updateProfile } from '../../api/profile/update';
 import { deletePost } from '../../api/post/delete';
 
+
 /**
  * Render the user's profile on the page.
  * @param {Object} profileData - The data of the user's profile.
@@ -60,42 +61,53 @@ const renderPostsPage = (postsData, isOwner) => {
     const avatarUrl = post.author?.avatar?.url || '';
 
     postElement.innerHTML = `
-      <div class="each-post" id="post-${post.id}">
-        <div class="avatar-name-container">
-          ${
-            avatarUrl
-              ? `<img src="${avatarUrl}" alt="Avatar" class="post-avatar">`
-              : ''
-          }
-          ${
-            post.author
-              ? `<p><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
-              : ''
-          }
-        </div>
+    <div class="rounded-lg max-w-sm mx-auto" id="post-${post.id}">
+      <div class="avatar-name-container flex flex-row items-center">
         ${
-          post.media
-            ? `
-          <a href="/post/?id=${post.id}">
-            <img src="${post.media.url}" alt="${post.media.alt}">
-          </a>
-        `
-            : ''
+          avatarUrl
+            ? `<a class="pb-3" href="/post/?id=${post.id}">
+                <img class="h-10 w-10 object-cover cursor-pointer rounded-full" src="${avatarUrl}" alt="Avatar">
+              </a>`
+            : `<a class="pb-3" href="/post/?id=${post.id}">
+                <img class="h-10 w-10 object-cover cursor-pointer rounded-full" src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg" alt="Default Avatar">
+              </a>`
         }
-        <h3>${post.title}</h3>
-        <p>${post.body}</p>
         ${
-          isOwner
-            ? `
-          <div class="button-container">
-            <button class="post-btn edit-btn" data-post-id="${post.id}">Edit</button>
-            <button class="post-btn delete-btn" data-post-id="${post.id}">Delete</button>
-          </div>
-        `
+          post.author
+            ? `<p class="pl-2"><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
             : ''
         }
       </div>
-    `;
+      ${
+        post.media
+          ? `<a href="/post/?id=${post.id}" class="flex justify-center">
+              <img src="${post.media.url}" alt="${post.media.alt}" class="post-media object-cover h-64 max-w-64">
+            </a>`
+          : `<div class="flex justify-center">
+              <img src="/public/images/default-image.avif" alt="Default Media" class="h-64 max-w-64 post-media object-cover">
+            </div>`
+      }
+      <h3 class="post-title font-bold text-m text-center">${post.title}</h3>
+      <p class="post-body text-sm text-center">${post.body}</p>
+      <div id="time-tags" class="text-gray-600 pt-3 mb-3">
+        <p class="text-left font-bold text-xs m-2">Posted: ${timeSincePosted(post.created)}</p>
+        ${
+          post.tags && post.tags.length > 0
+            ? `<p class="text-left text-xs font-bold">Tags: ${post.tags.join(', ')}</p>`
+            : ''
+        }
+      </div>
+      ${
+        isOwner
+          ? `<div class="button-container flex justify-center gap-2">
+              <button class="post-btn edit-btn" data-post-id="${post.id}">Edit</button>
+              <button class="post-btn delete-btn" data-post-id="${post.id}">Delete</button>
+            </div>`
+          : ''
+      }
+    </div>
+  `;
+  
 
     fragment.appendChild(postElement);
   });
