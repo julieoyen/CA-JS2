@@ -49,9 +49,8 @@
             name="login"
             method="post"
             aria-labelledby="login-form"
-            id="login-form"
           >
-            <div>
+            <div class="m-2">
               <label for="email" class="block text-sm font-medium text-gray-700"
                 >Email address:</label
               >
@@ -65,7 +64,7 @@
                 class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
               />
             </div>
-            <div>
+            <div class="m-2">
               <label
                 for="password"
                 class="block text-sm font-medium text-gray-700"
@@ -82,13 +81,15 @@
                 class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
               />
             </div>
-            <button
-              type="submit"
-              id="login-btn"
-              class="flex w-full justify-center rounded-md bg-primary border border-transparent px-4 py-2 text-sm sm:text-base font-semibold text-white shadow-sm transition duration-300 ease-in-out transform hover:bg-primary_hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              LOGIN
-            </button>
+            <div class="flex items-center justify-between m-2">
+              <button
+                type="submit"
+                id="login-btn"
+                class="flex w-full justify-center mt-1 rounded-lg bg-gradient-to-r from-[#765cd7] via-[#a77bff] to-[#765cd7] px-10 py-4 text-sm sm:text-base cursor-pointer font-semibold text-white shadow-lg transition-all duration-500 ease-in-out transform hover:bg-gradient-to-r hover:from-[#a77bff] hover:to-[#765cd7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                LOGIN
+              </button>
+            </div>
           </form>
 
           <!-- Register Link -->
