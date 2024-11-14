@@ -43,7 +43,7 @@ const nextButton = document.getElementById('next-btn');
 let totalPosts = 0; // Define totalPosts variable
 
 // Function to calculate "time ago" format
-function timeSincePosted(postedDate) {
+export function timeSincePosted(postedDate) {
   const now = new Date();
   const diff = now - new Date(postedDate); // Difference in milliseconds
   const seconds = Math.floor(diff / 1000);
@@ -103,40 +103,96 @@ export async function loadPosts(page = 1, query = '') {
     // Render the posts
     posts.forEach(post => {
       const postElement = document.createElement('div');
-      postElement.classList.add('each-post', 'rounded-lg', 'max-w-sm', 'mx-auto', 'shadow-lg', 'w-64', 'flex-wrap', 'p-4');
+      postElement.classList.add(
+  'each-post', 
+  'rounded-xl', 
+  'shadow-lg', 
+  'w-full', 
+  'max-w-xs', 
+  'flex-col', 
+  'bg-white', 
+  'mb-8', 
+  'pt-4', 
+  'flex', 
+  'items-center',
+  'mx-auto' );
     
       const avatarUrl = post.author?.avatar?.url || '';
       const isOwner = myName === post.author?.name;
-
+    
       postElement.innerHTML = `
-        <div class="rounded-lg max-w-sm mx-auto">
-          <div class="avatar-name -container flex flex-row items-center">
-            ${avatarUrl ? `<a class="pb-3" href="/post/?id=${post.id}">
-              <img class="h-10 w-10 object-cover cursor-pointer rounded-full" src="${avatarUrl}" alt ="Avatar"> 
-              </a>` : `
-              <a class="pb-3" href="/post/?id=${post.id}">
-              <img class="h-10 w-10 object-cover cursor-pointer rounded-full" src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg" alt="Default Avatar">
-              </a>`}
-            ${post.author ? `<p class="pl-2"><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>` : ''}
+      <div class="rounded-lg w-full mx-auto bg-white flex flex-col">
+        <div class="flex flex-row justify-between items-center w-full mx-auto">
+          <div class="flex flex-row ml-2">
+            ${
+              avatarUrl 
+                ? `<a class="pb-3 hover:cursor-pointer" href="/profile/?author=${post.author.name}">
+                      <img class="h-12 w-12 object-cover rounded-full" src="${avatarUrl}" alt="Avatar">
+                    </a>`
+                : `<a class="pb-3 hover:cursor-pointer" href="/post/?id=${post.id}">
+                      <img class="h-12 w-12 object-cover rounded-full" src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg" alt="Default Avatar">
+                    </a>`
+            }
+            ${
+              post.author 
+                ? `<p class="pl-2 pt-3 hover:cursor-pointer">
+                    <a href="/profile/?author=${post.author.name}">${post.author.name}</a>
+                   </p>`
+                : ''
+            }
           </div>
-          ${post.media ? `<a href="/post/?id=${post.id}" class="flex justify-center">
-            <img src="${post.media.url}" alt="${post.media.alt}" class="post-media object-cover h-64 max-w-64">
-            </a>` : `<div class="flex justify-center">
-            <img src="/public/images/default-image.avif" alt="Default Media" class="h-64 max-w-64 post-media object-cover">
-            </div>`}
-          <h3 class="post-title font-bold text-m text-center">${post.title}</h3>
-          <p class="post-body text-sm text-center">${post.body}</p>
-          <div id="time-tags" class="text-gray-600 pt-3 mb-3">
-            <p class="text-left font-bold text-xs m-2">Posted: ${timeSincePosted(post.created)}</p>
-            ${post.tags && post.tags.length > 0 ? `<p class="text-left text-xs font-bold">Tags: ${post.tags.join(', ')}</p>` : ''}
+          <div class="mr-2">
+            ${
+              isOwner 
+                ? `<div class="button-container flex justify-center gap-2 mb-2">
+                    <button class="post-btn edit-btn cursor-default px-3 py-1 bg-background text-white rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-purple-500" data-post-id="${post.id}">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button class="post-btn delete-btn hover:cursor-pointer px-3 py-1 bg-red-400 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-purple-500" data-post-id="${post.id}">
+                      <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                  </div>`
+                : ''
+            }
           </div>
-          ${isOwner ? `<div class="button-container flex justify-center gap-2">
-            <button class="post-btn edit-btn" data-post-id="${post.id}">Edit</button>
-            <button class="post-btn delete-btn" data-post-id="${post.id}">Delete</button>
-          </div>` : ''}
         </div>
-      `;
+  
+        ${
+          post.media && post.media.url 
+            ? `<a href="/post/?id=${post.id}" class="flex justify-center hover:cursor-pointer w-full">
+                  <img src="${post.media.url}" alt="${post.media.alt || 'Default Media'}" class="post-media object-cover w-full h-64">
+               </a>`
+            : `<div class="flex justify-center w-full">
+                  <img src="/public/images/default-image.avif" alt="Default Media" class="h-64 w-full object-cover">
+               </div>`
+        }
+  
+        <div class="m-2 min-h-32 max-h-32">
+          <h3 class="post-title font-bold text-xl text-left m-2 truncate w-fit hover:cursor-pointer">
+            <a href="/post/?id=${post.id}">${post.title}</a>
+          </h3>
+  
+          <p class="post-body text-sm text-left m-2 break-words w-fit hover:cursor-pointer">
+            <a href="/post/?id=${post.id}">${post.body}</a>
+          </p>
+        </div>
+  
+        <div id="time-tags" class="flex flex-row text-gray-600 pb-4 w-fit mx-2 mt-2justify-between">
+          <p class="text-left font-bold text-xs ml-2">Posted: ${timeSincePosted(post.created)}</p>
+          ${
+            post.tags && post.tags.length > 0 
+              ? `<p class="text-right text-xs font-bold ml-2">Tags: ${post.tags.join(', ')}</p>`
+              : ''
+          }
+        </div>
+      </div>
+    `;
+  
 
+
+    
+
+    
       postsContainer.appendChild(postElement);
 
       // Add event listener for delete button
@@ -168,7 +224,7 @@ function renderPaginationControls(totalPages) {
   paginationControls.querySelectorAll('.page-btn').forEach(button => button.remove());
 
   // Limit the number of pages shown in the pagination control (e.g., 5 pages)
-  const maxPageButtons = 5;
+  const maxPageButtons = 4;
 
   // Show only pages around the current page
   let startPage = Math.max(currentPage - Math.floor(maxPageButtons / 2), 1);
@@ -183,7 +239,7 @@ function renderPaginationControls(totalPages) {
   for (let i = startPage; i <= endPage; i++) {
     const pageButton = document.createElement('button');
     pageButton.textContent = i;
-    pageButton.classList.add('page-btn', 'pagination-btn', 'py-2', 'px-4', 'rounded-md', 'cursor-pointer', 'transition-colors', 'duration-300');
+    pageButton.classList.add('page-btn', 'pagination-btn', 'lg:py-2', 'lg:px-4', 'md:py-2', 'md:px-4' ,'py-1', 'px-2', 'rounded-md', 'cursor-pointer', 'transition-colors', 'duration-300');
     pageButton.classList.add(i === currentPage ? 'bg-primary' : 'bg-gray-300', 'text-gray-600', i === currentPage ? 'text-white' : 'hover:bg-secondary');
     pageButton.addEventListener('click', () => loadPosts(i)); // Navigate to the clicked page
     paginationControls.insertBefore(pageButton, nextButton);

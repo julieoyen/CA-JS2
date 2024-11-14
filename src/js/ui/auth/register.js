@@ -42,6 +42,8 @@ export async function onRegister(event) {
       const data = await response.json();
       if (data?.data?.email === emailValue) {
         window.alert(`User: ${data.data.name} (${data.data.email}) created`);
+        window.location.pathname = '/auth/login/';
+        
       }
     }
   } catch (error) {
