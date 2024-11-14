@@ -5,35 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profile Page</title>
     <script type="module" src="/src/app.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/94f8d6093f.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
-  <body>
-    <h1>Profile</h1>
+  <body class="bg-secondary">
+    <nav
+      id="nav-bar"
+      class="relative flex items-center justify-between px-2 flex-wrap"
+    >
+      <div class="absolute inset-0 opacity-50 pointer-events-none"></div>
 
-    <!-- Section to display user profile information -->
-    <section id="profile-info"></section>
+      <div class="flex items-center flex-shrink-0 text-white relative z-10">
+        <a href="/">
+          <img
+            class="lg:h-24 lg:w-24 md:h-16 md:w-16 w-14 h-14 mr-5"
+            src="/public/images/some-logo.png"
+            alt="Logo"
+          />
+        </a>
+      </div>
 
-    <!-- Section for user actions like creating posts or updating profile -->
-    <div id="actions-section"></div>
+      <section id="profile-info" class="relative z-10"></section>
 
-    <!-- Profile update form, initially hidden and shown when updating profile -->
-    <div id="update-profile-form" style="display: none">
-      <h2>Update Profile</h2>
-      <form id="profile-update-form">
-        <label for="avatar-url">Avatar URL:</label>
-        <input type="text" id="avatar-url" name="avatar" />
+      <!-- User Profile and Logout Section -->
+      <div class="block lg:mr-9 mr-3">
+        <button
+          id="user-menu-button"
+          class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none"
+        >
+          <img
+            src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg"
+            id="user-avatar"
+            class="h-8 w-8 lg:h-16 lg:w-16 rounded-full object-cover"
+            alt="User Avatar"
+          />
+        </button>
+        <div
+          id="navbar-links"
+          class="hidden absolute mt-2 right-0 min-w-[180px] bg-white shadow-md p-2 rounded-md"
+        >
+          <ul role="navigation" aria-labelledby="user-menu-button">
+            <li
+              role="option"
+              aria-label="My Profile"
+              class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+            >
+              <i class="fa-solid fa-house"></i>
+              <a href="/" class="ml-2 text-gray-800">Home</a>
+            </li>
+            <li
+              role="option"
+              aria-label="Create Post"
+              class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+            >
+              <i class="fa-regular fa-square-plus"></i>
+              <a href="/post/create/" id="create-btn" class="ml-2 text-gray-800"
+                >Create Post</a
+              >
+            </li>
+            <hr class="my-2 border-slate-200" />
+            <li
+              id="logout-btn"
+              role="option"
+              aria-label="Sign Out"
+              class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+            >
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <p class="ml-2 text-gray-800">Sign Out</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-        <label for="banner-url">Banner URL:</label>
-        <input type="text" id="banner-url" name="banner" />
+    <main>
+      <!-- Section to display user profile information -->
+      <section id="profile-info"></section>
 
-        <label for="bio">Bio:</label>
-        <textarea id="bio" name="bio"></textarea>
+      <!-- Section for user actions like creating posts or updating profile -->
+      <div id="actions-section" class="flex justify-end m-4"></div>
+      <div
+        id="update-profile-form"
+        class="flex justify-end bg-secondary p-6 text-primary rounded-xl shadow-lg max-w-sm mt-10"
+        style="display: none"
+      >
+        <h2 class="flex justify-end text-xl font-bold mb-4">Update Profile</h2>
+        <form id="profile-update-form" class="space-y-3 text-roboto">
+          <div class="mb-4">
+            <label
+              for="avatar-url"
+              class="block text-black text-sm font-semibold"
+              >Avatar URL:</label
+            >
+            <input
+              type="text"
+              id="avatar-url"
+              name="avatar"
+              class="w-full px-3 py-1 mt-1 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+          <div class="mb-4">
+            <label
+              for="banner-url"
+              class="block text-black text-sm font-semibold"
+              >Banner URL:</label
+            >
+            <input
+              type="text"
+              id="banner-url"
+              name="banner"
+              class="w-full px-3 py-1 mt-1 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+          <div class="mb-4">
+            <label for="bio" class="block text-black text-sm font-semibold"
+              >Bio:</label
+            >
+            <textarea
+              id="bio"
+              name="bio"
+              class="w-full px-3 py-1 mt-1 bg-white rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="flex justify-between">
+            <button
+              type="submit"
+              class="px-4 py-1 bg-primary text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              Update Profile
+            </button>
+            <button
+              type="button"
+              id="cancel-update-btn"
+              class="px-4 py-1 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
 
-        <button type="submit">Update Profile</button>
-        <button type="button" id="cancel-update-btn">Cancel</button>
-      </form>
-    </div>
-
-    <!-- Section to display user posts -->
-    <section id="user-posts"></section>
+      <!-- Section to display user posts -->
+      <section>
+        <div class="container mx-auto px-4 rounded-md">
+          <div
+            id="user-posts"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-items-center"
+          ></div>
+        </div>
+      </section>
+    </main>
   </body>
 </html>

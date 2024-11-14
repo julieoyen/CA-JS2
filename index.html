@@ -2,21 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/public/images/some-logo.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
       rel="stylesheet"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/94f8d6093f.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Noroff FED2 JS2 CA</title>
     <script type="module" src="/src/app.js"></script>
   </head>
-
-  <body>
+  <body class="bg-secondary">
     <!-- Navigation Bar -->
     <nav
       id="nav-bar"
-      class="flex items-center justify-between bg-primary px-2 flex-wrap relative"
+      class="flex items-center justify-between bg-primary_hover px-2 flex-wrap relative"
     >
       <div class="flex items-center flex-shrink-0 text-white">
         <a href="/"
@@ -26,18 +29,33 @@
             alt="Logo"
         /></a>
       </div>
+
       <!-- Search Menu -->
-      <div id="search-menu" class="relative flex items-center ">
-        <div class="flex lg:px-4 lg:py-3 md:px-3 md:py-2 px-2 py-1 rounded-md border-2 bg-white border-secondary overflow-hidden max-w-sm mx-5 font-[sans-serif]">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px"
-            class="fill-gray-600 mr-3 rotate-90">
+      <div
+        id="search-menu"
+        class="relative flex items-center w-36 lg:w-auto md:w-auto sm:w-auto"
+      >
+        <div
+          class="flex lg:px-4 lg:py-3 md:px-3 md:py-2 px-2 py-1 rounded-md border-2 bg-white border-secondary overflow-hidden max-w-sm mx-5 font-[sans-serif]"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 192.904 192.904"
+            width="16px"
+            class="fill-gray-600 mr-3 rotate-90"
+          >
             <path
-              d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
-            </path>
+              d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"
+            ></path>
           </svg>
-          <input type="text" id="searchbar-field" placeholder="Search..." class="w-full outline-none bg-transparent text-gray-600 text-sm" />
+          <input
+            type="text"
+            id="searchbar-field"
+            placeholder="Search..."
+            class="w-full outline-none bg-transparent text-gray-600 text-sm"
+          />
         </div>
-        </div>
+      </div>
 
       <!-- User Profile and Logout -->
       <div class="block lg:mr-9 mr-3">
@@ -45,13 +63,13 @@
           id="user-menu-button"
           class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none"
         >
-          <img src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg"
+          <img
+            src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg"
             id="user-avatar"
             class="h-8 w-8 lg:h-16 lg:w-16 rounded-full object-cover"
             alt="User Avatar"
           />
         </button>
-        <!-- Profile Dropdown Menu -->
         <div
           id="navbar-links"
           class="hidden absolute mt-2 right-0 min-w-[180px] bg-white shadow-md p-2 rounded-md"
@@ -62,11 +80,7 @@
               aria-label="My Profile"
               class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
             >
-              <img
-                class="w-5 h-5 text-slate-400"
-                src="/public/images/user-regular.svg"
-                alt="user-icon"
-              />
+              <i class="fa-regular fa-user"></i>
               <a id="my-profile-link" class="ml-2 text-gray-800">My Profile</a>
             </li>
             <li
@@ -74,11 +88,7 @@
               aria-label="Create Post"
               class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
             >
-              <img
-                class="w-5 h-5 text-slate-400"
-                src="/public/images/square-plus-regular.svg"
-                alt="plus-icon"
-              />
+              <i class="fa-regular fa-square-plus"></i>
               <a href="/post/create/" id="create-btn" class="ml-2 text-gray-800"
                 >Create Post</a
               >
@@ -90,47 +100,62 @@
               aria-label="Sign Out"
               class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
             >
-            <img class="w-5 h-5 text-slate-400 rotate-180" src="/public/images/right-from-bracket-solid.svg" alt="logout-icon">
-                <path d="M3 4.25A2..."></path>
-              </svg>
+              <i class="fa-solid fa-right-from-bracket"></i>
               <p class="ml-2 text-gray-800">Sign Out</p>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+
+    <!-- Filter Section -->
     <section class="my-5 py-5 flex justify-center items-center">
-    <div></div>
-      <label for="tag-filter" class="visually-hidden"
-        >Tags:</label
-      >
-      <select id="tag-filter" aria-label="filtrer etter tagger">
-        <option value="all">Show all tags</option>
-      </select>
-    </div>
-</section>
+      <div class="bg-white p-3 rounded-lg">
+        <label
+          for="tag-filter"
+          class="visually-hidden text-black font-semibold font-roboto"
+          >Tags:</label
+        >
+        <select
+          id="tag-filter"
+          class="rounded-lg p-2 font-roboto border-secondary border-2"
+          aria-label="Filter by tags"
+        >
+          <option value="all">Show all tags</option>
+        </select>
+      </div>
+    </section>
+
     <!-- Posts Container -->
     <section>
-      <div class="container mx-auto px-4 rounded-md ">
+      <div class="container mx-auto px-4 rounded-md">
         <div
           id="posts-container"
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 gap-x-4 w-full justify-center"
         ></div>
       </div>
     </section>
 
-<!-- Pagination Controls -->
-<div id="pagination-controls" class="flex justify-center items-center gap-4 my-7">
-  <!-- Previous Button -->
-  <button id="prev-btn" class="pagination-btn py-2 px-4 bg-gray-300 text-gray-600 rounded-md shadow-md cursor-pointer hover:bg-secondary disabled:bg-gray-200 disabled:cursor-not-allowed" disabled>Previous</button>
-
-  <!-- Page Number Buttons will be dynamically added here -->
-
-  <!-- Next Button -->
-  <button id="next-btn" class="pagination-btn py-2 px-4 bg-gray-300 text-gray-600 rounded-md shadow-md cursor-pointer hover:bg-secondary disabled:bg-gray-200 disabled:cursor-not-allowed" disabled>Next</button>
-</div>
-
-
-    
+    <!-- Pagination Controls -->
+    <div
+      id="pagination-controls"
+      class="flex justify-center items-center gap-4 my-7"
+    >
+      <button
+        id="prev-btn"
+        class="pagination-btn lg:py-2 lg:px-4 md:py-2 md:px-4 py-1 px-2 bg-gray-300 text-gray-600 rounded-md shadow-md cursor-pointer hover:bg-secondary disabled:bg-gray-200 disabled:cursor-not-allowed"
+        disabled
+      >
+        Previous
+      </button>
+      <!-- Page Number Buttons will be dynamically added here -->
+      <button
+        id="next-btn"
+        class="pagination-btn lg:py-2 lg:px-4 md:py-2 md:px-4 py-1 px-2 bg-gray-300 text-gray-600 rounded-md shadow-md cursor-pointer hover:bg-secondary disabled:bg-gray-200 disabled:cursor-not-allowed"
+        disabled
+      >
+        Next
+      </button>
+    </div>
   </body>
 </html>

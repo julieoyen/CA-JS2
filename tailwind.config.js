@@ -18,6 +18,9 @@ module.exports = {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
       },
+      screens: {
+        xs: '480px', // Define a custom breakpoint for extra-small screens
+      },
     },
   },
   plugins: [],
