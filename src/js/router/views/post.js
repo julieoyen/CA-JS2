@@ -128,7 +128,7 @@ async function retrievePost(endpointValue) {
                   <img src="${postsData.media.url}" alt="${postsData.media.alt || 'Default Media'}" class="post-media object-cover w-fit h-fit">
                </a>`
             : `<div class="flex justify-center w-full">
-                  <img src="/public/images/default-image.avif" alt="Default Media" class="h-64 w-full object-cover">
+                  <img src="/public/images/default-image.svg" alt="Default Media" class="h-64 w-full object-cover">
                </div>`
         }
         <div class="m-2 min-h-40 max-h-40 text-wrap">
