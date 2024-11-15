@@ -147,7 +147,7 @@ export const renderPostsPage = (postsData, isOwner) => {
                   <img src="${post.media.url}" alt="${post.media.alt || 'Default Media'}" class="post-media object-cover w-full h-64">
                </a>`
             : `<div class="flex justify-center w-full">
-                  <img src="/public/images/default-image.avif" alt="Default Media" class="h-64 w-full object-cover">
+                  <img src="/public/images/default-image.svg" alt="Default Media" class="h-64 w-full object-cover">
                </div>`
         }
   
