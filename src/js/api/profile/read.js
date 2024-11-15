@@ -1,7 +1,7 @@
-import { API_SOCIAL_PROFILES } from "../constants";
-import { getMyToken } from "../../utilities/getInfo.js";
-import { getNameFromURL } from "../../utilities/getInfo.js";
-import { headers } from "../../api/headers";
+import { API_SOCIAL_PROFILES } from '../constants';
+import { getMyToken } from '../../utilities/getInfo.js';
+import { getNameFromURL } from '../../utilities/getInfo.js';
+import { headers } from '../../api/headers';
 
 const token = await getMyToken();
 
@@ -13,9 +13,9 @@ const token = await getMyToken();
  */
 const createFetchOptions = (requestHeaders) => {
   return {
-    method: "GET",
+    method: 'GET',
     headers: requestHeaders,
-    redirect: "follow",
+    redirect: 'follow',
   };
 };
 
@@ -50,7 +50,7 @@ const makeGetRequest = async (url, fetchOptions) => {
 export async function readProfile() {
   const username = getNameFromURL();
   const requestHeaders = headers();
-  requestHeaders.append("Authorization", `Bearer ${token}`);
+  requestHeaders.append('Authorization', `Bearer ${token}`);
   const fetchOptions = createFetchOptions(requestHeaders);
   const fetchUrl = `${API_SOCIAL_PROFILES}/${username}`;
 

@@ -7,9 +7,9 @@
  * @throws {Error} If the request to fetch post data fails.
  */
 
-import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants";
-import { headers } from "../../api/headers";
-import { getIDFromURL, getMyToken } from "../../utilities/getInfo";
+import { API_SOCIAL_POSTS, API_KEY } from '../../api/constants';
+import { headers } from '../../api/headers';
+import { getIDFromURL, getMyToken } from '../../utilities/getInfo';
 
 const targetId = getIDFromURL();
 const endpoint = `${API_SOCIAL_POSTS}/${targetId}`;
@@ -27,22 +27,22 @@ export async function onUpdatePost(postId) {
 
   try {
     const response = await fetch(endpoint, {
-      method: "GET",
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
-        "X-Noroff-API-Key": API_KEY,
+        'X-Noroff-API-Key': API_KEY,
         ...headers(),
       },
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch post data");
+      throw new Error('Failed to fetch post data');
     }
 
     const postData = await response.json();
     populateForm(postData.data);
   } catch (error) {
-    console.error("Error fetching post data:", error);
+    console.error('Error fetching post data:', error);
   }
 }
 
@@ -53,11 +53,11 @@ export async function onUpdatePost(postId) {
  * @returns {void}
  */
 function populateForm(post) {
-  document.getElementById("title").value = post.title;
-  document.getElementById("body").value = post.body;
-  document.getElementById("tags").value = post.tags.join(", ");
-  document.getElementById("image").value = post.media?.url || "";
-  document.getElementById("imageAlt").value = post.media?.alt || "";
+  document.getElementById('title').value = post.title;
+  document.getElementById('body').value = post.body;
+  document.getElementById('tags').value = post.tags.join(', ');
+  document.getElementById('image').value = post.media?.url || '';
+  document.getElementById('imageAlt').value = post.media?.alt || '';
 }
 
 /**

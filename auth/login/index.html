@@ -1,28 +1,117 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noroff FED2 JS2 CA</title>
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="path-to-your-styles.css" />
     <script type="module" src="/src/app.js" defer></script>
   </head>
 
-  <body>
-    <h1>Login</h1>
-    <form id="login-form" name="login">
-      <div>
-        <label for="email">Email</label>
-        <input id="email" type="email" name="email" required />
-      </div>
+  <body class="bg-background font-roboto">
+    <div
+      class="flex min-h-screen items-center justify-center px-4 sm:px-6 py-4"
+    >
+      <!-- Grid Container -->
+      <div class="grid md:grid-cols-2 gap-4 max-w-6xl w-full items-stretch">
+        <!-- Login Form Section -->
+        <div
+          class="bg-white rounded-lg shadow-md p-4 w-full sm:max-w-lg md:max-w-md lg:max-w-lg mx-auto md:mx-0 flex flex-col justify-center"
+          style="max-height: 600px; overflow-y: auto"
+        >
+          <!-- Title and Subtitle -->
 
-      <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required />
-      </div>
+          <h1
+            class="text-center mt-4 text-3xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4"
+          >
+            Login
+          </h1>
+          <h2 class="text-center text-sm sm:text-base text-gray-600 mb-4">
+            Log in to your account and share your story with the world.
+          </h2>
+          <p class="text-center mb-4 sm:mb-6 hidden md:block text-gray-600">
+            Your social journey starts here.
+          </p>
 
-      <a href="/auth/register/">Register</a>
-      <button type="submit" id="login-btn">Login</button>
-    </form>
+          <!-- Login Form -->
+          <form
+            class="space-y-4 sm:space-y-5"
+            id="login-form"
+            name="login"
+            method="post"
+            aria-labelledby="login-form"
+          >
+            <div class="m-2">
+              <label for="email" class="block text-sm font-medium text-gray-700"
+                >Email address:</label
+              >
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                aria-required="true"
+                class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
+              />
+            </div>
+            <div class="m-2">
+              <label
+                for="password"
+                class="block text-sm font-medium text-gray-700"
+                >Password:</label
+              >
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+                aria-required="true"
+                minlength="8"
+                class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
+              />
+            </div>
+            <div class="flex items-center justify-between m-2">
+              <button
+                type="submit"
+                id="login-btn"
+                class="flex w-full justify-center mt-1 rounded-lg bg-gradient-to-r from-[#765cd7] via-[#a77bff] to-[#765cd7] px-10 py-4 text-sm sm:text-base cursor-pointer font-semibold text-white shadow-lg transition-all duration-500 ease-in-out transform hover:bg-gradient-to-r hover:from-[#a77bff] hover:to-[#765cd7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                LOGIN
+              </button>
+            </div>
+          </form>
+
+          <!-- Register Link -->
+          <div class="py-4 text-center">
+            <p class="text-sm text-gray-600">Don't have an account?</p>
+            <a
+              href="/auth/register/"
+              class="inline-block mt-2 rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
+              >Register here</a
+            >
+          </div>
+        </div>
+
+        <!-- Image Section -->
+        <div
+          class="hidden ml-20 md:inline-block h-fit w-fit relative justify-center align-center"
+        >
+          <img
+            src="/public/images/img-login.png"
+            class="max-w-l max-h-[500px] mx-auto object-cover"
+            alt="three people typing on their phone"
+            style="object-fit: cover; height: auto; width: 100%"
+          />
+        </div>
+      </div>
+    </div>
   </body>
 </html>

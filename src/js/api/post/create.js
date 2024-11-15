@@ -1,6 +1,6 @@
-import { API_SOCIAL_POSTS } from "../constants";
-import { headers } from "../headers";
-import { getKey } from "../auth/key";
+import { API_SOCIAL_POSTS } from '../constants';
+import { headers } from '../headers';
+import { getKey } from '../auth/key';
 
 /**
  * Creates a new social post on the API.
@@ -26,7 +26,7 @@ export async function createPost({ title, body, tags, media, altMedia }) {
 
   const postHeaders = new Headers({
     Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   });
 
   const [apiKey, apiValue] = apiKeyHeader.entries().next().value;
@@ -41,21 +41,21 @@ export async function createPost({ title, body, tags, media, altMedia }) {
   if (media) {
     postData.media = {
       url: media,
-      alt: altMedia || "Image alt text",
+      alt: altMedia || 'Image alt text',
     };
   }
 
   try {
     const response = await fetch(apiUrl, {
-      method: "POST",
+      method: 'POST',
       headers: postHeaders,
       body: JSON.stringify(postData),
     });
 
     if (response.ok) {
       await response.json();
-      window.alert("Post created successfully!");
-      window.location.href = "/";
+      window.alert('Post created successfully!');
+      window.location.href = '/';
     } else {
       throw new Error(`Error creating post: ${response.statusText}`);
     }

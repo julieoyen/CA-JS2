@@ -1,39 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noroff FED2 JS2 CA</title>
+    <title>Edit Post</title>
     <script type="module" src="/src/app.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
   </head>
+  <body class="bg-background font-roboto">
+    <div
+      class="flex min-h-screen items-center justify-center px-4 sm:px-6 py-4"
+    >
+      <div
+        class="bg-white rounded-lg shadow-md p-4 w-full sm:max-w-lg md:max-w-md lg:max-w-lg mx-auto md:mx-0 flex flex-col justify-center"
+      >
+        <h1
+          class="text-center text-3xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4"
+        >
+          Edit Post
+        </h1>
 
-  <body>
-    <h1>Edit Post</h1>
-
-    <form id="edit-post-form" name="editPost">
-      <div>
-        <label for="title">Title:</label>
-        <input type="text" name="title" id="title" required />
+        <form
+          id="edit-post-form"
+          name="editPost"
+          class="space-y-4 sm:space-y-5"
+        >
+          <div class="m-2">
+            <label class="block text-gray-700" for="title">Title:</label>
+            <input
+              class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
+              type="text"
+              name="title"
+              id="title"
+              required
+            />
+          </div>
+          <div class="m-2">
+            <label class="block text-gray-700" for="body">Body:</label>
+            <textarea
+              class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
+              id="body"
+              name="body"
+              required
+            ></textarea>
+          </div>
+          <div class="m-2">
+            <label class="block text-gray-700" for="tags">Tags:</label>
+            <input
+              class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
+              type="text"
+              name="tags"
+              id="tags"
+            />
+          </div>
+          <div class="m-2">
+            <label class="block text-gray-700" for="image">Image:</label>
+            <input
+              class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
+              type="text"
+              name="image"
+              id="image"
+            />
+          </div>
+          <div class="m-2">
+            <label class="block text-gray-700" for="imageAlt"
+              >Image Alt Text:</label
+            >
+            <input
+              class="mt-1 block w-full rounded-md border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 p-2 text-sm sm:text-base"
+              type="text"
+              name="imageAlt"
+              id="imageAlt"
+            />
+          </div>
+          <div class="flex justify-center items-center mt-4 space-x-2">
+            <button
+              class="rounded-lg bg-gradient-to-r from-[#765cd7] via-[#a77bff] to-[#765cd7] px-10 py-4 text-sm sm:text-base cursor-pointer font-semibold text-white shadow-lg transition-all duration-500 ease-in-out transform hover:bg-gradient-to-r hover:from-[#a77bff] hover:to-[#765cd7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              type="button"
+              id="edit-post-btn"
+              type="submit"
+            >
+              Edit Post
+            </button>
+            <a
+              href="#"
+              class="rounded-lg border-2 border-[#765cd7] bg-transparent px-10 py-4 text-sm sm:text-base cursor-pointer font-semibold text-[#765cd7] shadow-md transition-all duration-500 ease-in-out transform hover:bg-[#eae2f8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#765cd7]"
+              onclick="history.go(-1)"
+              ><button id="cancel-edit">Cancel</button></a
+            >
+          </div>
+        </form>
       </div>
-      <div>
-        <label for="body">Body:</label>
-        <textarea id="body" name="body" required></textarea>
-      </div>
-      <div>
-        <label for="tags">Tags:</label>
-        <input type="text" name="tags" id="tags" />
-      </div>
-      <div>
-        <label for="image">Image:</label>
-        <input type="text" name="image" id="image" />
-      </div>
-      <div>
-        <label for="imageAlt">Image Alt Text:</label>
-        <input type="text" name="imageAlt" id="imageAlt" />
-      </div>
-      <button id="edit-post-btn" type="submit">Edit Post</button>
-      <button id="cancel-edit">Cancel</button>
-    </form>
+    </div>
   </body>
 </html>

@@ -1,7 +1,7 @@
-import { getKey } from "../auth/key";
-import { getMyName } from "../../utilities/getInfo.js";
-import { API_KEY } from "../../api/constants";
-import { API_SOCIAL_PROFILES } from "../constants";
+import { getKey } from '../auth/key';
+import { getMyName } from '../../utilities/getInfo.js';
+import { API_KEY } from '../../api/constants';
+import { API_SOCIAL_PROFILES } from '../constants';
 
 /**
  * Updates the user profile with the provided bio, avatar, and banner information.
@@ -15,29 +15,29 @@ import { API_SOCIAL_PROFILES } from "../constants";
  */
 export async function updateProfile(bio, { avatar, banner }) {
   const myHeaders = new Headers();
-  myHeaders.append("X-Noroff-API-Key", API_KEY);
+  myHeaders.append('X-Noroff-API-Key', API_KEY);
 
   const token = await getKey();
-  myHeaders.append("Authorization", `Bearer ${token}`);
-  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append('Authorization', `Bearer ${token}`);
+  myHeaders.append('Content-Type', 'application/json');
 
   const oldData = {
     bio: bio,
     banner: {
       url: banner,
-      alt: "banner alt",
+      alt: 'banner alt',
     },
     avatar: {
       url: avatar,
-      alt: "avatar alt",
+      alt: 'avatar alt',
     },
   };
 
   const infoOptions = {
-    method: "PUT",
+    method: 'PUT',
     headers: myHeaders,
     body: JSON.stringify(oldData),
-    redirect: "follow",
+    redirect: 'follow',
   };
 
   const username = getMyName();

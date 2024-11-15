@@ -1,4 +1,4 @@
-import { API_AUTH_REGISTER } from "../../api/constants";
+import { API_AUTH_REGISTER } from '../../api/constants';
 
 /**
  * Handles the user registration process.
@@ -10,9 +10,9 @@ import { API_AUTH_REGISTER } from "../../api/constants";
  */
 export async function onRegister(event) {
   event.preventDefault();
-  const emailValue = document.querySelector("#email").value;
-  const nameValue = document.querySelector("#name").value;
-  const passwordValue = document.querySelector("#password").value;
+  const emailValue = document.querySelector('#email').value;
+  const nameValue = document.querySelector('#name').value;
+  const passwordValue = document.querySelector('#password').value;
 
   const registerPostData = {
     name: nameValue,
@@ -22,9 +22,9 @@ export async function onRegister(event) {
 
   try {
     const response = await fetch(API_AUTH_REGISTER, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(registerPostData),
     });
@@ -36,15 +36,17 @@ export async function onRegister(event) {
           window.alert(data.errors[0].message);
         }
       } else {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
     } else {
       const data = await response.json();
       if (data?.data?.email === emailValue) {
         window.alert(`User: ${data.data.name} (${data.data.email}) created`);
+        window.location.pathname = '/auth/login/';
+        
       }
     }
   } catch (error) {
-    throw new Error("Error: " + error.message);
+    throw new Error('Error: ' + error.message);
   }
 }

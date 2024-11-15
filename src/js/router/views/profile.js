@@ -9,8 +9,32 @@ import { deletePost } from "../../api/post/delete";
  * @param {Object} profileData - The data of the user's profile.
  * @param {boolean} isOwner - Flag indicating if the current user owns the profile.
  */
-const renderProfilePage = (profileData, isOwner) => {
+
+export function timeSincePosted(postedDate) {
+  const now = new Date();
+  const diff = now - new Date(postedDate); // Difference in milliseconds
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 7) {
+    return new Date(postedDate).toLocaleDateString();
+  } else if (days >= 1) {
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  } else if (hours >= 1) {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  } else if (minutes >= 1) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  } else {
+    return 'Just now';
+  }
+}
+
+export const renderProfilePage = (profileData, isOwner) => {
   const profileSection = document.getElementById("profile-info");
+  const nav = document.querySelector("nav")
+  const profilePicture = document.getElementById("user-avatar")
   const username = getMyName() || "Guest";
 
   const bio =
@@ -24,19 +48,29 @@ const renderProfilePage = (profileData, isOwner) => {
       ? profileData.avatar.url
       : null;
 
+  if (avatarUrl && profilePicture) {
+        profilePicture.src = avatarUrl; 
+      } else if (profilePicture) {
+        profilePicture.src = "/public/images/default-avatar.jpg";
+      }
   if (bannerUrl) {
-    profileSection.style.backgroundImage = `url(${bannerUrl})`;
-    profileSection.style.backgroundSize = "cover";
-    profileSection.style.backgroundPosition = "center";
-  } else {
-    profileSection.style.backgroundImage = "";
+    nav.style.backgroundImage = ` url(${bannerUrl})`;
+    nav.style.backgroundSize = "cover";
+    nav.style.backgroundRepeat = "no-repeat";
+    nav.style.backgroundPosition = "center";
+    nav.style.maxHeight = "96px"
+  } 
+  else {
+    profileSection.style.backgroundColor = "#765cd7";
   }
 
-  profileSection.innerHTML = `  
-    ${isOwner ? `<p>Welcome back</p>` : ""}    
-    <h2>${profileData.name || "Unknown User"}</h2>
-    ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar" class="avatar">` : ""} 
-    ${bio ? `<p>${bio}</p>` : ""}
+  profileSection.innerHTML = ` 
+  <div class="flex flex-col items-center justify-center">
+  <div class="relative z-10 text-white text-center lg:p-8" pt-7>
+    <h1 class="text-xl lg:text-4xl font-bold ">${profileData.name || "Unknown User"}</h1>
+    <div>
+    ${bio ? `<p class="text-lg lg:text-2xl w-full">${bio}</p>` : ""}
+    </div>
   `;
 };
 
@@ -45,62 +79,104 @@ const renderProfilePage = (profileData, isOwner) => {
  * @param {Array} postsData - An array of post data objects.
  * @param {boolean} isOwner - Flag indicating if the current user owns the posts.
  */
-const renderPostsPage = (postsData, isOwner) => {
+export const renderPostsPage = (postsData, isOwner) => {
   const userPostsSection = document.getElementById("user-posts");
+  
   userPostsSection.innerHTML = "";
 
-  const postsHeader = document.createElement("h2");
-  postsHeader.textContent = "Posts";
-  userPostsSection.appendChild(postsHeader);
-
-  const fragment = document.createDocumentFragment();
 
   postsData.forEach((post) => {
     const postElement = document.createElement("div");
+    postElement.classList.add(
+      'each-post', 
+      'rounded-xl', 
+      'shadow-lg', 
+      'w-full', 
+      'max-w-xs', 
+      'flex-col', 
+      'bg-white', 
+      'mb-8', 
+      'pt-4', 
+      'flex', 
+      'items-center',
+      'mx-auto' 
+    );
+  
     const avatarUrl = post.author?.avatar?.url || "";
-
+  
     postElement.innerHTML = `
-      <div class="each-post" id="post-${post.id}">
-        <div class="avatar-name-container">
+      <div class="rounded-lg w-full mx-auto bg-white flex flex-col">
+        <div class="flex flex-row justify-between items-center w-full mx-auto">
+          <div class="flex flex-row ml-2">
+            ${
+              avatarUrl 
+                ? `<a class="pb-3 hover:cursor-pointer" href="/profile/?author=${post.author.name}">
+                      <img class="h-12 w-12 object-cover rounded-full" src="${avatarUrl}" alt="Avatar">
+                    </a>`
+                : `<a class="pb-3 hover:cursor-pointer" href="/post/?id=${post.id}">
+                      <img class="h-12 w-12 object-cover rounded-full" src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg" alt="Default Avatar">
+                    </a>`
+            }
+            ${
+              post.author 
+                ? `<p class="pl-2 pt-3 hover:cursor-pointer">
+                    <a href="/profile/?author=${post.author.name}">${post.author.name}</a>
+                   </p>`
+                : ''
+            }
+          </div>
+          <div class="mr-2">
+            ${
+              isOwner 
+                ? `<div class="button-container flex justify-center gap-2 mb-2">
+                    <button class="post-btn edit-btn cursor-default px-3 py-1 bg-background text-white rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-purple-500" data-post-id="${post.id}">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button class="post-btn delete-btn hover:cursor-pointer px-3 py-1 bg-red-400 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-purple-500" data-post-id="${post.id}">
+                      <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                  </div>`
+                : ''
+            }
+          </div>
+        </div>
+  
+        ${
+          post.media && post.media.url 
+            ? `<a href="/post/?id=${post.id}" class="flex justify-center hover:cursor-pointer w-full">
+                  <img src="${post.media.url}" alt="${post.media.alt || 'Default Media'}" class="post-media object-cover w-full h-64">
+               </a>`
+            : `<div class="flex justify-center w-full">
+                  <img src="/public/images/default-image.svg" alt="Default Media" class="h-64 w-full object-cover">
+               </div>`
+        }
+  
+        <div class="m-2 min-h-40 max-h-40 text-wrap">
+          <h3 class="post-title font-bold text-wrap text-xl text-left m-2 truncate w-fit hover:cursor-pointer">
+            <a href="/post/?id=${post.id}">${post.title}</a>
+          </h3>
+  
+          <p class="post-body text-sm text-left m-2 break-words w-fit hover:cursor-pointer">
+            <a href="/post/?id=${post.id}">${post.body}</a>
+          </p>
+        </div>
+  
+        <div id="time-tags" class="flex flex-row text-gray-600 pb-4 w-fit mx-2 mt-2 justify-between">
+          <p class="text-left font-bold text-xs ml-2">Posted: ${timeSincePosted(post.created)}</p>
           ${
-            avatarUrl
-              ? `<img src="${avatarUrl}" alt="Avatar" class="post-avatar">`
-              : ""
-          }
-          ${
-            post.author
-              ? `<p><a href="/profile/?author=${post.author.name}">${post.author.name}</a></p>`
-              : ""
+            post.tags && post.tags.length > 0 
+              ? `<p class="text-right text-xs font-bold ml-2">Tags: ${post.tags.join(', ')}</p>`
+              : ''
           }
         </div>
-        ${
-          post.media
-            ? `
-          <a href="/post/?id=${post.id}">
-            <img src="${post.media.url}" alt="${post.media.alt}">
-          </a>
-        `
-            : ""
-        }
-        <h3>${post.title}</h3>
-        <p>${post.body}</p>
-        ${
-          isOwner
-            ? `
-          <div class="button-container">
-            <button class="post-btn edit-btn" data-post-id="${post.id}">Edit</button>
-            <button class="post-btn delete-btn" data-post-id="${post.id}">Delete</button>
-          </div>
-        `
-            : ""
-        }
       </div>
     `;
-
-    fragment.appendChild(postElement);
+  
+  
+    userPostsSection.appendChild(postElement);
   });
+  
 
-  userPostsSection.appendChild(fragment);
 
   userPostsSection.addEventListener("click", (event) => {
     const target = event.target;
@@ -131,6 +207,7 @@ const showUpdateForm = (profileData) => {
     document.getElementById("bio").value = profileData.bio || "";
 
     updateForm.style.display = "block";
+    updateForm.classList.add('bg-secondary', 'p-6', 'rounded-xl', 'shadow-lg', 'max-w-sm', 'mt-10');
   }
 
   const cancelBtn = document.getElementById("cancel-update-btn");
@@ -168,24 +245,38 @@ const handleProfileUpdate = async (event) => {
  * @param {Object} profileData - The data of the user's profile.
  */
 const renderOwnerButtons = (isOwner, profileData) => {
-  const actionsSection = document.getElementById("actions-section");
+  const authUserLinks = document.getElementById("auth-user-links")
+
 
   if (isOwner) {
-    const createPostButton = document.createElement("button");
-    createPostButton.id = "create-post-btn";
-    createPostButton.textContent = "Create Post";
-    createPostButton.addEventListener("click", () => {
-      window.location.href = "/post/create/";
-    });
-    actionsSection.appendChild(createPostButton);
-
     const updateProfileButton = document.createElement("button");
+    const createPostButton = document.createElement("button")
+    createPostButton.id = "create-post-btn";
+    createPostButton.classList.add('text-gray-800');
+    createPostButton.innerHTML = `  
+    <li
+    role="option"
+    aria-label="Create Post"
+    id="create-btn"
+    class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+  ><i class="fa-regular fa-square-plus"><a href="/post/create/" id="create-btn" class="ml-2 text-gray-800">
+  </i>Create Post</a>
+  </li> `;
     updateProfileButton.id = "update-profile-btn";
-    updateProfileButton.textContent = "Update Profile";
+    updateProfileButton.classList.add('text-gray-800');
+    updateProfileButton.innerHTML = `
+    <li
+    role="option"
+    aria-label="update-profile"
+    id="actions-section"
+    class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+  ><p><i class="fa-solid fa-user-pen"></i> Update Profile<p></li>`;
     updateProfileButton.addEventListener("click", () => {
       showUpdateForm(profileData);
     });
-    actionsSection.appendChild(updateProfileButton);
+    authUserLinks.appendChild(updateProfileButton);
+    authUserLinks.appendChild(createPostButton)
+
 
     document
       .getElementById("profile-update-form")
@@ -196,7 +287,7 @@ const renderOwnerButtons = (isOwner, profileData) => {
 /**
  * Handle the profile page logic, including fetching profile and posts, and rendering the UI.
  */
-const handleProfilePage = async () => {
+export const handleProfilePage = async () => {
   try {
     const currentUser = getNameFromURL();
     const loggedInUser = getMyName();
@@ -210,7 +301,8 @@ const handleProfilePage = async () => {
     renderProfilePage(profileData, isOwner);
     renderPostsPage(postsData, isOwner);
     renderOwnerButtons(isOwner, profileData);
-  } catch (error) {
+  }
+   catch (error) {
     console.error("Error handling profile page:", error);
   }
 };

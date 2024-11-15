@@ -1,7 +1,7 @@
-import { API_KEY } from "../constants";
-import { API_SOCIAL_POSTS, API_SOCIAL_PROFILES } from "../constants";
-import { headers } from "../../api/headers";
-import { getMyToken } from "../../utilities/getInfo.js";
+import { API_KEY } from '../constants';
+import { API_SOCIAL_POSTS, API_SOCIAL_PROFILES } from '../constants';
+import { headers } from '../../api/headers';
+import { getMyToken } from '../../utilities/getInfo.js';
 
 const token = getMyToken();
 
@@ -16,13 +16,13 @@ const token = getMyToken();
  */
 async function makeGetRequest(url, requestHeaders) {
   if (token) {
-    requestHeaders.append("Authorization", `Bearer ${token}`);
+    requestHeaders.append('Authorization', `Bearer ${token}`);
   }
 
   const fetchOptions = {
-    method: "GET",
+    method: 'GET',
     headers: requestHeaders,
-    redirect: "follow",
+    redirect: 'follow',
   };
 
   try {
@@ -46,7 +46,7 @@ async function makeGetRequest(url, requestHeaders) {
  */
 export async function readPost(id) {
   const requestHeaders = headers();
-  requestHeaders.append("Authorization", `Bearer ${token}`);
+  requestHeaders.append('Authorization', `Bearer ${token}`);
   return makeGetRequest(`${API_SOCIAL_POSTS}/${id}`, requestHeaders);
 }
 
@@ -61,7 +61,7 @@ export async function readPost(id) {
  */
 export async function readPosts(limit = 12, page = 1, tag) {
   const requestHeaders = new Headers();
-  requestHeaders.append("X-Noroff-API-Key", API_KEY);
+  requestHeaders.append('X-Noroff-API-Key', API_KEY);
   return makeGetRequest(API_SOCIAL_POSTS, requestHeaders);
 }
 

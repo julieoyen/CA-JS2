@@ -1,4 +1,4 @@
-import { createPost } from "../../api/post/create";
+import { createPost } from '../../api/post/create';
 
 /**
  * Handles the create post form submission event.
@@ -17,13 +17,13 @@ export async function onCreatePost(event) {
   const media = form.image.value;
 
   if (!title || !body) {
-    alert("Please enter a title and body for your post.");
+    alert('Please enter a title and body for your post.');
     return;
   }
 
   try {
     await createPost({ title, body, tags, media });
   } catch (error) {
-    alert("Error creating post: " + error.message);
+    alert('Error creating post: ' + error.message);
   }
 }

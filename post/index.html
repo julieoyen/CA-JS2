@@ -1,14 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noroff FED2 JS2 CA</title>
+    <title>Single Post Page</title>
     <script type="module" src="/src/app.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/94f8d6093f.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
-  <body>
-    <h1>Single Page</h1>
-    <section id="post-container"></section>
+  <body class="bg-secondary">
+    <nav
+      id="nav-bar"
+      class="bg-primary_hover max-h-[96px] relative flex items-center justify-between px-2 flex-wrap"
+    >
+      <div class="absolute inset-0 opacity-50 pointer-events-none"></div>
+
+      <div class="flex items-center flex-shrink-0 text-white relative z-10">
+        <a href="/">
+          <img
+            class="lg:h-24 lg:w-24 md:h-16 md:w-16 w-14 h-14 mr-5"
+            src="/public/images/some-logo.png"
+            alt="Logo"
+          />
+        </a>
+      </div>
+
+      <section id="profile-info" class="relative z-10"></section>
+
+      <div class="block lg:mr-9 mr-3">
+        <button
+          id="user-menu-button"
+          class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none"
+        >
+          <img
+            src="/public/images/avatar-icon-profile-icon-member-login-isolated-vector.jpg"
+            id="user-avatar"
+            class="h-8 w-8 lg:h-16 lg:w-16 rounded-full object-cover"
+            alt="User Avatar"
+          />
+        </button>
+        <div
+          id="navbar-links"
+          class="hidden absolute mt-2 right-0 min-w-[180px] bg-white shadow-md p-2 rounded-md"
+        >
+          <div id="auth-user-links" class="flex flex-col">
+            <ul role="navigation" aria-labelledby="user-menu-button">
+              <li
+                role="option"
+                aria-label="My Profile"
+                class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+              >
+                <i class="fa-solid fa-house"></i>
+                <a href="/" class="ml-2 text-gray-800">Home</a>
+              </li>
+            </ul>
+            <hr class="my-2 border-slate-200" />
+            <li
+              id="logout-btn"
+              role="option"
+              aria-label="Sign Out"
+              class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+            >
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <p class="ml-2 text-gray-800">Sign Out</p>
+            </li>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main
+      class="flex flex-col items-center text-center place-content-center justify-items-center"
+    >
+      <section id="post-container">
+        <div class="container mx-auto px-4 rounded-md max-w-screen-xs">
+          <div
+            id="user-posts"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          ></div>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
