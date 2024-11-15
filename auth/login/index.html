@@ -4,16 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Styles -->
     <link rel="stylesheet" href="path-to-your-styles.css" />
     <script type="module" src="/src/app.js" defer></script>
   </head>
@@ -30,15 +26,9 @@
           style="max-height: 600px; overflow-y: auto"
         >
           <!-- Title and Subtitle -->
-          <div class="text-center justify-items-center">
-            <img
-              class="h-8 w-8 lg:hidden rounded-full object-cover mt-10"
-              src="/public/images/some-logo.png"
-              alt=""
-            />
-          </div>
+
           <h1
-            class="text-center text-3xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4"
+            class="text-center mt-4 text-3xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-4"
           >
             Login
           </h1>
@@ -111,7 +101,9 @@
         </div>
 
         <!-- Image Section -->
-        <div class="hidden md:inline-block h-auto w-full relative">
+        <div
+          class="hidden ml-20 md:inline-block h-fit w-fit relative justify-center align-center"
+        >
           <img
             src="/public/images/img-login.png"
             class="max-w-l max-h-[500px] mx-auto object-cover"

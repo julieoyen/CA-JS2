@@ -31,7 +31,7 @@ export function timeSincePosted(postedDate) {
   }
 }
 
-const renderProfilePage = (profileData, isOwner) => {
+export const renderProfilePage = (profileData, isOwner) => {
   const profileSection = document.getElementById("profile-info");
   const nav = document.querySelector("nav")
   const profilePicture = document.getElementById("user-avatar")
@@ -49,15 +49,16 @@ const renderProfilePage = (profileData, isOwner) => {
       : null;
 
   if (avatarUrl && profilePicture) {
-        profilePicture.src = avatarUrl; // Set the src to the avatarUrl
+        profilePicture.src = avatarUrl; 
       } else if (profilePicture) {
-        profilePicture.src = "/public/images/default-avatar.jpg"; // Set to a default avatar if no avatarUrl
+        profilePicture.src = "/public/images/default-avatar.jpg";
       }
   if (bannerUrl) {
     nav.style.backgroundImage = ` url(${bannerUrl})`;
     nav.style.backgroundSize = "cover";
     nav.style.backgroundRepeat = "no-repeat";
     nav.style.backgroundPosition = "center";
+    nav.style.maxHeight = "96px"
   } 
   else {
     profileSection.style.backgroundColor = "#765cd7";
@@ -68,7 +69,7 @@ const renderProfilePage = (profileData, isOwner) => {
   <div class="relative z-10 text-white text-center lg:p-8" pt-7>
     <h1 class="text-xl lg:text-4xl font-bold ">${profileData.name || "Unknown User"}</h1>
     <div>
-    ${bio ? `<p class="text-lg lg:text-2xl">${bio}</p>` : ""}
+    ${bio ? `<p class="text-lg lg:text-2xl w-full">${bio}</p>` : ""}
     </div>
   `;
 };
@@ -78,7 +79,7 @@ const renderProfilePage = (profileData, isOwner) => {
  * @param {Array} postsData - An array of post data objects.
  * @param {boolean} isOwner - Flag indicating if the current user owns the posts.
  */
-const renderPostsPage = (postsData, isOwner) => {
+export const renderPostsPage = (postsData, isOwner) => {
   const userPostsSection = document.getElementById("user-posts");
   
   userPostsSection.innerHTML = "";
@@ -150,8 +151,8 @@ const renderPostsPage = (postsData, isOwner) => {
                </div>`
         }
   
-        <div class="m-2 min-h-32 max-h-32">
-          <h3 class="post-title font-bold text-xl text-left m-2 truncate w-fit hover:cursor-pointer">
+        <div class="m-2 min-h-40 max-h-40 text-wrap">
+          <h3 class="post-title font-bold text-wrap text-xl text-left m-2 truncate w-fit hover:cursor-pointer">
             <a href="/post/?id=${post.id}">${post.title}</a>
           </h3>
   
@@ -244,17 +245,38 @@ const handleProfileUpdate = async (event) => {
  * @param {Object} profileData - The data of the user's profile.
  */
 const renderOwnerButtons = (isOwner, profileData) => {
-  const actionsSection = document.getElementById("actions-section");
+  const authUserLinks = document.getElementById("auth-user-links")
+
 
   if (isOwner) {
     const updateProfileButton = document.createElement("button");
+    const createPostButton = document.createElement("button")
+    createPostButton.id = "create-post-btn";
+    createPostButton.classList.add('text-gray-800');
+    createPostButton.innerHTML = `  
+    <li
+    role="option"
+    aria-label="Create Post"
+    id="create-btn"
+    class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+  ><i class="fa-regular fa-square-plus"><a href="/post/create/" id="create-btn" class="ml-2 text-gray-800">
+  </i>Create Post</a>
+  </li> `;
     updateProfileButton.id = "update-profile-btn";
-    updateProfileButton.classList.add("rounded-lg", "bg-primary", "text-white", "lg:px-6", "py-2", 'px-3', "shadow-lg", "cursor-pointer");
-    updateProfileButton.innerHTML = `<p class="font-roboto lg:text-lg md:text-md xs:text-sm"><i class="fa-solid fa-user-pen"></i> Update Profile<p>`;
+    updateProfileButton.classList.add('text-gray-800');
+    updateProfileButton.innerHTML = `
+    <li
+    role="option"
+    aria-label="update-profile"
+    id="actions-section"
+    class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
+  ><p><i class="fa-solid fa-user-pen"></i> Update Profile<p></li>`;
     updateProfileButton.addEventListener("click", () => {
       showUpdateForm(profileData);
     });
-    actionsSection.appendChild(updateProfileButton);
+    authUserLinks.appendChild(updateProfileButton);
+    authUserLinks.appendChild(createPostButton)
+
 
     document
       .getElementById("profile-update-form")
@@ -265,7 +287,7 @@ const renderOwnerButtons = (isOwner, profileData) => {
 /**
  * Handle the profile page logic, including fetching profile and posts, and rendering the UI.
  */
-const handleProfilePage = async () => {
+export const handleProfilePage = async () => {
   try {
     const currentUser = getNameFromURL();
     const loggedInUser = getMyName();
@@ -279,7 +301,8 @@ const handleProfilePage = async () => {
     renderProfilePage(profileData, isOwner);
     renderPostsPage(postsData, isOwner);
     renderOwnerButtons(isOwner, profileData);
-  } catch (error) {
+  }
+   catch (error) {
     console.error("Error handling profile page:", error);
   }
 };

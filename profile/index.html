@@ -17,14 +17,14 @@
   <body class="bg-secondary">
     <nav
       id="nav-bar"
-      class="relative flex items-center justify-between px-2 flex-wrap"
+      class="relative flex items-center justify-between px-2 flex-nowrap"
     >
       <div class="absolute inset-0 opacity-50 pointer-events-none"></div>
 
       <div class="flex items-center flex-shrink-0 text-white relative z-10">
         <a href="/">
           <img
-            class="lg:h-24 lg:w-24 md:h-16 md:w-16 w-14 h-14 mr-5"
+            class="lg:h-24 lg:w-24 md:h-16 md:w-16 w-14 h-14"
             src="/public/images/some-logo.png"
             alt="Logo"
           />
@@ -50,6 +50,7 @@
           id="navbar-links"
           class="hidden absolute mt-2 right-0 min-w-[180px] bg-white shadow-md p-2 rounded-md"
         >
+        <div id="auth-user-links" class="flex flex-col">
           <ul role="navigation" aria-labelledby="user-menu-button">
             <li
               role="option"
@@ -59,16 +60,7 @@
               <i class="fa-solid fa-house"></i>
               <a href="/" class="ml-2 text-gray-800">Home</a>
             </li>
-            <li
-              role="option"
-              aria-label="Create Post"
-              class="cursor-pointer flex items-center p-3 hover:bg-gray-100"
-            >
-              <i class="fa-regular fa-square-plus"></i>
-              <a href="/post/create/" id="create-btn" class="ml-2 text-gray-800"
-                >Create Post</a
-              >
-            </li>
+          </div>
             <hr class="my-2 border-slate-200" />
             <li
               id="logout-btn"
@@ -84,15 +76,15 @@
       </div>
     </nav>
 
-    <main>
+    <main class="flex flex-col justify-center items-center text-center">
       <!-- Section to display user profile information -->
       <section id="profile-info"></section>
 
       <!-- Section for user actions like creating posts or updating profile -->
-      <div id="actions-section" class="flex justify-end m-4"></div>
+      <div id="actions-section" class="flex flex-col justify-center text-center m-4"></div>
       <div
-        id="update-profile-form"
-        class="flex justify-end bg-secondary p-6 text-primary rounded-xl shadow-lg max-w-sm mt-10"
+        id="update-profile-form" 
+        class="flex flex-col px-32 justify-end items-end text-left bg-secondary p-6 text-primary rounded-xl shadow-lg max-w-sm mt-10"
         style="display: none"
       >
         <h2 class="flex justify-end text-xl font-bold mb-4">Update Profile</h2>
@@ -153,11 +145,11 @@
       </div>
 
       <!-- Section to display user posts -->
-      <section>
+      <section class="mt-10">
         <div class="container mx-auto px-4 rounded-md">
           <div
             id="user-posts"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-items-center"
+            class="grid grid-cols-1 sm:max-grid-cols-2 lg:grid-cols-3 xl:max-grid-cols-4 gap-4 place-content-center place-items-center"
           ></div>
         </div>
       </section>

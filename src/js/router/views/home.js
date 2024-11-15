@@ -1,8 +1,9 @@
 import { authGuard } from '../../utilities/authGuard';
-import { getMyName } from '../../utilities/getInfo.js';
+import { getMyName, getNameFromURL } from '../../utilities/getInfo.js';
 import { getKey } from '../../api/auth/key';
 import { API_SOCIAL_POSTS, API_KEY } from '../../api/constants';
 import { deletePost } from '../../api/post/delete.js';
+
 
 // Initial setup
 const myName = getMyName();
@@ -96,11 +97,12 @@ export async function loadPosts(page = 1, query = '') {
     const { data: posts, meta } = await response.json();
     totalPosts = meta.total; // Update totalPosts with the total number of posts
     const totalPages = meta.pageCount; // Get total pages from meta
-    
-    // Clear the current posts
+
+
+
+
     postsContainer.innerHTML = '';
     
-    // Render the posts
     posts.forEach(post => {
       const postElement = document.createElement('div');
       postElement.classList.add(
@@ -144,10 +146,7 @@ export async function loadPosts(page = 1, query = '') {
           <div class="mr-2">
             ${
               isOwner 
-                ? `<div class="button-container flex justify-center gap-2 mb-2">
-                    <button class="post-btn edit-btn cursor-default px-3 py-1 bg-background text-white rounded-lg hover:bg-primary focus:outline-none focus:ring-2 focus:ring-purple-500" data-post-id="${post.id}">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
+                ? `
                     <button class="post-btn delete-btn hover:cursor-pointer px-3 py-1 bg-red-400 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-purple-500" data-post-id="${post.id}">
                       <i class="fa-regular fa-trash-can"></i>
                     </button>
@@ -167,8 +166,8 @@ export async function loadPosts(page = 1, query = '') {
                </div>`
         }
   
-        <div class="m-2 min-h-32 max-h-32">
-          <h3 class="post-title font-bold text-xl text-left m-2 truncate w-fit hover:cursor-pointer">
+        <div class="m-2 min-h-40 max-h-40">
+          <h3 class="post-title font-bold text-xl text-left m-2 truncate break-words max-w-fit hover:cursor-pointer text-wrap">
             <a href="/post/?id=${post.id}">${post.title}</a>
           </h3>
   
@@ -195,14 +194,16 @@ export async function loadPosts(page = 1, query = '') {
     
       postsContainer.appendChild(postElement);
 
-      // Add event listener for delete button
+
       const deleteButton = postElement.querySelector('.delete-btn');
       if (deleteButton) {
         deleteButton.addEventListener('click', (e) => {
           const postId = e.target.getAttribute('data-post-id');
-          deletePost(postId);
-        });
-      }
+          if (postId) {
+            deletePost(postId);
+          }
+      });
+    }
     });
 
     // Render pagination controls
@@ -213,6 +214,9 @@ export async function loadPosts(page = 1, query = '') {
     console.error('Error loading posts:', error);
   }
 }
+
+
+
 
 // Function to render pagination controls
 function renderPaginationControls(totalPages) {
